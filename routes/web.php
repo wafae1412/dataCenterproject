@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MaintenanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,16 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/maintenance/{resource}', [MaintenanceController::class, 'create']);
+    Route::post('/maintenance', [MaintenanceController::class, 'store']);
+    Route::get('/maintenances', [MaintenanceController::class, 'index'])
+    ->middleware('auth');
+});
+
