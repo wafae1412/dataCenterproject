@@ -21,8 +21,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        return view('home');
+     public function index()
+{
+    $role = auth()->user()->role->name;
+
+    if ($role === 'Admin') {
+        return redirect('/admin/dashboard');
     }
+
+    if ($role === 'Responsable') {
+        return redirect('/responsable/dashboard');
+    }
+
+    return view('home');
+}
+
 }

@@ -21,3 +21,14 @@
     </div>
 </div>
 @endsection
+@extends('layouts.app')
+
+ @extends('layouts.app')
+
+@section('content')
+    <h2>Bienvenue {{ auth()->user()->name }}</h2>
+
+    <p>Rôle : {{ auth()->user()->role->name }}</p>
+
+    <p>Vous êtes connecté à l'application DataCenter.</p>
+@endsection

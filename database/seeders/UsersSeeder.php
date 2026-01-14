@@ -11,10 +11,10 @@ class UsersSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'Wafae',
-            'email' => 'admin@datacenter.com',
+            'name' => 'Wafae-user',
+            'email' => 'user@datacenter.com',
             'password' => Hash::make('12345678'),
-            'role_id' => 4, // Admin
+            'role_id' => 3, // user
             'created_at' => now(),
             'updated_at' => now(),
         ]);

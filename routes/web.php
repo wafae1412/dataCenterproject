@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,40 @@ use App\Http\Controllers\MaintenanceController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
+
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->middleware(['auth','role:Admin']);
+    Route::middleware(['auth', 'role:Admin'])->group(function () {
+
+    Route::get('/admin/users', [UserController::class, 'index'])
+        ->name('admin.users');
+
+    Route::post('/admin/users/{id}/role', [UserController::class, 'updateRole'])
+        ->name('admin.users.updateRole');
+});
+    Route::get('/responsable/dashboard', function () {
+        return view('responsable.dashboard');
+    })->middleware('role:Responsable');
+    
+
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/reservations/create', function () {
+        return view('reservations.create');
+    })->name('reservations.create');
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', function () {
+        return view('notifications.index');
+    })->name('notifications.index');
+});
+
 
 Auth::routes();
 
@@ -33,5 +68,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/maintenance', [MaintenanceController::class, 'store']);
     Route::get('/maintenances', [MaintenanceController::class, 'index'])
     ->middleware('auth');
+    Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::delete('/admin/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+
 });
 

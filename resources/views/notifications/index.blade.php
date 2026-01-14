@@ -16,5 +16,13 @@
         @endif
     </div>
 @endforeach
+ 
+ 
+<ul>
+    <li>Votre réservation est en attente</li>
+    <li>Maintenance prévue demain</li>
+    <li>Ressource approuvée</li>
+</ul>
+ 
 
 @endsection
