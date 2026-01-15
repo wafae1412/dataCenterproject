@@ -1,0 +1,205 @@
+/* Categories Index CSS */
+
+.categories-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.categories-header {
+    margin-bottom: 30px;
+}
+
+.categories-header h1 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.alert-danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.btn-new-category {
+    display: inline-block;
+    background-color: #3b82f6;
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-new-category:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f8fafc;
+    border-radius: 10px;
+    border: 2px dashed #cbd5e1;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.empty-state a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.empty-state a:hover {
+    text-decoration: underline;
+}
+
+.categories-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.categories-table thead {
+    background-color: #1e293b;
+}
+
+.categories-table th {
+    color: white;
+    padding: 18px 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.categories-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s;
+}
+
+.categories-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.categories-table td {
+    padding: 18px 20px;
+    color: #334155;
+    font-size: 15px;
+}
+
+.categories-table td strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.resource-count {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-view, .btn-edit, .btn-delete {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-view {
+    background-color: #0ea5e9;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #0284c7;
+}
+
+.btn-edit {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #d97706;
+}
+
+.btn-delete {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #dc2626;
+}
+
+.delete-form {
+    margin: 0;
+    display: inline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .categories-container {
+        padding: 20px 15px;
+    }
+
+    .categories-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .actions-cell {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-view, .btn-edit, .btn-delete {
+        width: 100%;
+        text-align: center;
+    }
+}

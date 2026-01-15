@@ -11,21 +11,21 @@ class CreateResourcesTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('resources', function (Blueprint $table) {
-          $table->id();
+  public function up()
+{
+    Schema::create('resources', function (Blueprint $table) {
+        $table->id();
         $table->string('name');
         $table->foreignId('category_id')->constrained();
         $table->integer('cpu');
         $table->integer('ram');
         $table->integer('storage');
         $table->string('status')->default('available');
+        $table->text('description')->nullable();
         $table->string('location')->nullable();
         $table->timestamps();
-
-        });
-    }
+    });
+}
 
     /**
      * Reverse the migrations.
