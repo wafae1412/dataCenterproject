@@ -37,8 +37,21 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
+    
     public function notifications()
     {
         return $this->hasMany(Notification::class);
     }
-}
+
+ public function isAdmin()
+    {
+        return $this->role && $this->role->name === 'Admin';
+    }
+    public function isResponsable()
+    {
+        return $this->role && $this->role->name === 'Responsable';
+    }
+    public function isUser()
+    {
+        return $this->role && $this->role->name === 'Internal';
+    }}
