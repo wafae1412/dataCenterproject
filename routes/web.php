@@ -5,11 +5,11 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MaintenanceController;
-<<<<<<< HEAD
+
 use App\Http\Controllers\Admin\UserController;
-=======
+
 use Illuminate\Support\Facades\Auth;
->>>>>>> origin/maryam-resources
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');;
 });
 Route::middleware(['auth'])->group(function () {
 
@@ -81,16 +81,19 @@ Route::middleware('auth')->group(function () {
     // Routes pour la maintenance
     Route::get('/maintenance/{resource}', [MaintenanceController::class, 'create']);
     Route::post('/maintenance', [MaintenanceController::class, 'store']);
-<<<<<<< HEAD
+
     Route::get('/maintenances', [MaintenanceController::class, 'index'])
     ->middleware('auth');
     Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
     Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
     Route::delete('/admin/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
-=======
-    Route::get('/maintenances', [MaintenanceController::class, 'index']);
->>>>>>> origin/maryam-resources
 
+    Route::get('/maintenances', [MaintenanceController::class, 'index']);
+
+
+});
+Route::middleware(['auth','role:admin'])->group(function () {
+    // routes admin
 });
 
