@@ -95,5 +95,9 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware(['auth','role:admin'])->group(function () {
     // routes admin
+
+    Route::get('/maintenances', [MaintenanceController::class, 'index']);
+
+
 });
 
