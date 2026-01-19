@@ -19,7 +19,8 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <a href="{{ route('categories.create') }}" class="btn-new-category">
+        {{-- REMPLACE la route par un lien direct --}}
+        <a href="/categories/create" class="btn-new-category">
             + Nouvelle Catégorie
         </a>
     </div>
@@ -27,7 +28,8 @@
     @if($categories->isEmpty())
     <div class="empty-state">
         <p>Aucune catégorie disponible.</p>
-        <a href="{{ route('categories.create') }}">Créer votre première catégorie</a>
+        {{-- REMPLACE la route par un lien direct --}}
+        <a href="/categories/create">Créer votre première catégorie</a>
     </div>
     @else
     <table class="categories-table">
@@ -50,15 +52,16 @@
                 <td>
                     <span class="resource-count">{{ $category->resources->count() }} ressources</span>
                 </td>
-                <td>{{ $category->created_at->format('d/m/Y') }}</td>
+                <td>{{ $category->created_at?->format('d/m/Y') ?? 'Date inconnue' }}</td>
                 <td class="actions-cell">
-                    <a href="{{ route('categories.show', $category) }}" class="btn-view">
+                    {{-- REMPLACE les routes par des liens directs --}}
+                    <a href="/categories/{{ $category->id }}" class="btn-view">
                         Voir
                     </a>
-                    <a href="{{ route('categories.edit', $category) }}" class="btn-edit">
+                    <a href="/categories/{{ $category->id }}/edit" class="btn-edit">
                         Modifier
                     </a>
-                    <form action="{{ route('categories.destroy', $category) }}" method="POST" class="delete-form">
+                    <form action="/categories/{{ $category->id }}" method="POST" class="delete-form">
                         @csrf @method('DELETE')
                         <button type="submit" class="btn-delete">
                             Supprimer

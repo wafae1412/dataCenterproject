@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -42,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/resources/{resource}/status', [ResourceController::class, 'changeStatus'])->name('resources.changeStatus');
 
     // Catégories
-    Route::resource('categories', CategoryController::class)->only(['index', 'show']);
+    Route::resource('categories', CategoryController::class);
 
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
