@@ -1,7 +1,8 @@
-@extends('layouts.app')
+ @extends('layouts.app')
 
 @section('content')
 <div class="responsable-dashboard-container">
+
     <div class="dashboard-header">
         <h1>📊 Dashboard Responsable</h1>
         <p class="subtitle">Gestion des ressources et réservations</p>
@@ -58,18 +59,19 @@
         </div>
     </div>
 
-    <!-- Sections de gestion -->
+    <!-- Gestion -->
     <div class="responsable-sections">
+
         <div class="responsable-section">
-            <div class="section-header">
-                <h2>🛠️ Gestion des Ressources</h2>
-            </div>
+            <h2>🛠️ Gestion</h2>
+
             <div class="responsable-links">
                 <a href="{{ route('resources.index') }}" class="responsable-link-card">
                     <div class="link-icon">📦</div>
                     <h3>Ressources</h3>
                     <p>Consulter et gérer les ressources</p>
                 </a>
+
                 <a href="{{ route('maintenances.index') }}" class="responsable-link-card">
                     <div class="link-icon">🔧</div>
                     <h3>Maintenances</h3>
@@ -78,60 +80,47 @@
             </div>
         </div>
 
-        <!-- Réservations à Traiter -->
+        <!-- Réservations -->
         <div class="responsable-section">
             <div class="section-header">
                 <h2>📋 Réservations Récentes</h2>
-                <a href="{{ route('reservations.index') }}" class="btn btn-small btn-primary">Voir Tout</a>
+                <a href="{{ route('reservations.index') }}" class="btn btn-small btn-primary">
+                    Voir tout
+                </a>
             </div>
 
             @if($recent_reservations->isEmpty())
-                <div class="empty-state">
-                    <p>Aucune réservation récente.</p>
-                </div>
+                <p>Aucune réservation récente.</p>
             @else
-                <div class="responsable-table">
-                    <table class="table">
-                        <thead>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Ressource</th>
+                            <th>Début</th>
+                            <th>Fin</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recent_reservations as $reservation)
                             <tr>
-                                <th>Utilisateur</th>
-                                <th>Ressource</th>
-                                <th>Début</th>
-                                <th>Fin</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
+                                <td>{{ $reservation->user->name }}</td>
+                                <td>{{ $reservation->resource->name }}</td>
+                                <td>{{ $reservation->date_start }}</td>
+                                <td>{{ $reservation->date_end }}</td>
+                                <td>
+                                    <span class="status-{{ $reservation->status }}">
+                                        {{ ucfirst($reservation->status) }}
+                                    </span>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($recent_reservations as $reservation)
-                                <tr>
-                                    <td>{{ $reservation->user->name }}</td>
-                                    <td>{{ $reservation->resource->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($reservation->date_start)->format('d/m/Y H:i') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($reservation->date_end)->format('d/m/Y H:i') }}</td>
-                                    <td>
-                                        <span class="status-badge status-{{ $reservation->status }}">
-                                            {{ ucfirst($reservation->status) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('reservations.show', $reservation->id) }}" class="btn btn-small btn-info">Voir</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             @endif
         </div>
+
     </div>
 </div>
 @endsection
-    </div>
-</div>
-@endsection
-
-
-    
-</body>
-</html>

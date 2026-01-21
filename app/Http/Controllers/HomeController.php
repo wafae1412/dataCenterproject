@@ -33,7 +33,9 @@ class HomeController extends Controller
         return redirect('/responsable/dashboard');
     }
 
-    return view('home');
+    // Utilisateur interne
+        return redirect()->route('dashboard');
+        return view('home');
 }
 
 }
