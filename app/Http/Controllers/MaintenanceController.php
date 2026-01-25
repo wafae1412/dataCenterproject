@@ -15,10 +15,19 @@ class MaintenanceController extends Controller
         return view('maintenances.index', compact('maintenances'));
     }
 
-    public function create($resource_id)
-    {
-        return view('maintenance.create', compact('resource_id'));
-    }
+   public function create(Resource $resource)
+{
+    // Récupérer la ressource pré-sélectionnée
+    $selectedResource = $resource;
+
+    // Récupérer toutes les ressources pour la liste déroulante
+    $resources = Resource::all();
+
+    return view('maintenances.create', [
+        'resource' => $selectedResource,
+        'resources' => $resources
+    ]);
+}
 
     public function store(Request $request)
     {
