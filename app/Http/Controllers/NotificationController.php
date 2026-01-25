@@ -18,14 +18,17 @@ class NotificationController extends Controller
 
         return view('notifications.index', compact('notifications'));
     }
-
     public function markAsRead($id)
-    {
-        $notification = Notification::findOrFail($id);
-        $notification->update(['is_read' => true]);
+{
+    $notification = Notification::where('id', $id)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
 
-        return back();
-    }
+    $notification->update(['is_read' => true]);
+
+    return back();
+}
+
 }
 
 

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Maintenance;
 use App\Models\Resource;
+use App\Models\Reservation;
+use App\Models\Notification;
+
 
 class MaintenanceController extends Controller
 {
@@ -60,7 +63,16 @@ class MaintenanceController extends Controller
         // MISE À JOUR DU STATUT DE LA RESSOURCE
         $resource = Resource::findOrFail($validated['resource_id']);
         $resource->update(['status' => 'maintenance']);
+// notifier l utilisateur
+        $reservations = Reservation::where('resource_id', $validated['resource_id'])
+    ->whereIn('status', ['pending','approved','active'])
+    ->get();
 
+foreach ($reservations as $res) {
+    Notification::create([
+        'user_id' => $res->user_id,
+        'message' => 'Maintenance planifiée sur la ressource ' . $resource->name . ' que vous utilisez.'
+    ]);}
         // REDIRECTION AVEC MESSAGE DE SUCCÈS
         return redirect()->route('maintenances.index')
             ->with('success', 'Maintenance planifiée avec succès.');
