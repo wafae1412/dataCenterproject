@@ -6,19 +6,43 @@ use Illuminate\Http\Request;
 use App\Models\Resource;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ResourceController extends Controller
 {
     /**
-     * Afficher la liste des ressources
-     */
-    public function index()
-    {
-        $resources = Resource::with('category')->orderBy('created_at', 'desc')->get();
-        $categories = Category::all();
+ * Afficher la liste des ressources avec possibilité de filtrage
+ */
+public function index(Request $request)
+{
+    // Initialiser la requête avec la relation 'category' (pour éviter le problème N+1)
+    $query = Resource::with('category');
 
-        return view('resources.index', compact('resources', 'categories'));
+    // Appliquer le filtre par catégorie si présent dans la requête
+    if ($request->category_id) {
+        $query->where('category_id', $request->category_id);
     }
+
+    // Appliquer le filtre par statut si présent dans la requête
+    if ($request->status) {
+        $query->where('status', $request->status);
+    }
+
+    // Appliquer le filtre par recherche si présent dans la requête
+    if ($request->search) {
+        $query->where('name', 'like', '%' . $request->search . '%');
+    }
+
+    // Exécuter la requête et trier par date de création décroissante
+    $resources = $query->orderBy('created_at', 'desc')->get();
+
+    // Récupérer toutes les catégories pour le menu déroulant du filtre
+    $categories = Category::all();
+
+    // Passer les données à la vue
+    return view('resources.index', compact('resources', 'categories'));
+}
+
 
     /**
      * Afficher le formulaire de création

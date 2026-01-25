@@ -12,7 +12,11 @@ class Resource extends Model
         'name',
         'category_id',
         'status',
-        'description'
+        'description',
+        'cpu',
+        'ram',
+        'storage',
+        'location'
     ];
     public function category()
 {

@@ -1,42 +1,49 @@
-@extends('layouts.app') {{-- layout principal --}}
+@extends('layouts.app')
 
 @section('title', 'Ressources')
 
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/resources/index.css') }}">
-@endsection
-
 @section('content')
 <div class="resources-index">
+    {{-- Debug section --}}
+    <div>
+        <strong>Debug Filtres:</strong><br>
+        category_id: {{ request('category_id') ?: 'null' }}<br>
+        status: {{ request('status') ?: 'null' }}<br>
+        search: {{ request('search') ?: 'null' }}<br>
+        Total ressources affichees: {{ $resources->count() }}
+    </div>
+
     {{-- Header --}}
-    <div class="page-header">
+    <div>
         <h1>Ressources DataCenter</h1>
 
-        {{-- Messages --}}
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div>
+                {{ session('success') }}
+            </div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-error">{{ session('error') }}</div>
+            <div>
+                {{ session('error') }}
+            </div>
         @endif
 
-        {{-- Bouton ajouter --}}
-        <a href="{{ route('resources.create') }}" class="btn btn-primary">
+        <a href="{{ route('resources.create') }}">
             + Nouvelle Ressource
         </a>
     </div>
 
     {{-- Filtres --}}
-    <div class="filters-section">
+    <div>
         <h3>Filtres</h3>
         <form method="GET" action="{{ route('resources.index') }}" id="filter-form">
-            <div class="filters-grid">
+            <div>
                 {{-- Catégorie --}}
-                <div class="filter-field">
+                <div>
                     <label>Catégorie</label>
                     <select name="category_id" id="filter-category">
-                        <option value="">Toutes</option>
+                        <option value="">Toutes les categories</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}"
                                 {{ request('category_id') == $cat->id ? 'selected' : '' }}>
@@ -47,152 +54,105 @@
                 </div>
 
                 {{-- Statut --}}
-                <div class="filter-field">
+                <div>
                     <label>Statut</label>
                     <select name="status" id="filter-status">
-                        <option value="">Tous</option>
-                        <option value="available">Disponible</option>
-                        <option value="reserved">Réservé</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="disabled">Désactivé</option>
+                        <option value="">Tous les statuts</option>
+                        <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>
+                            Disponible
+                        </option>
+                        <option value="reserved" {{ request('status') == 'reserved' ? 'selected' : '' }}>
+                            Reserve
+                        </option>
+                        <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>
+                            Maintenance
+                        </option>
+                        <option value="disabled" {{ request('status') == 'disabled' ? 'selected' : '' }}>
+                            Desactive
+                        </option>
                     </select>
                 </div>
 
                 {{-- Recherche --}}
-                <div class="filter-field">
+                <div>
                     <label>Recherche</label>
                     <input type="text" name="search" id="filter-search"
-                           placeholder="Nom..." value="{{ request('search') }}">
+                           value="{{ request('search') }}" placeholder="Nom...">
                 </div>
 
                 {{-- Boutons --}}
-                <div class="filter-field">
-                    <label>&nbsp;</label>
-                    <div class="filter-buttons">
-                        <button type="submit" class="btn-primary">Filtrer</button>
-                        <a href="{{ route('resources.index') }}" class="action-btn">Reset</a>
-                    </div>
+                <div>
+                    <button type="submit" id="filter-button">Filtrer</button>
+                    <a href="{{ route('resources.index') }}">Reset</a>
                 </div>
             </div>
         </form>
     </div>
 
     {{-- Stats --}}
-    <div class="stats-section">
+    <div>
         <h3>Stats</h3>
-        <div class="stats-grid">
-            {{-- Total --}}
-            <div class="stat-card stat-total">
-                <span class="stat-number">{{ $resources->count() }}</span>
-                <span class="stat-label">Total</span>
+        <div>
+            <div>
+                <span>{{ $resources->count() }}</span>
+                <span>Total</span>
             </div>
-
-            {{-- Disponibles --}}
-            <div class="stat-card stat-available">
-                <span class="stat-number">{{ $resources->where('status', 'available')->count() }}</span>
-                <span class="stat-label">Disponibles</span>
+            <div>
+                <span>{{ $resources->where('status', 'available')->count() }}</span>
+                <span>Disponibles</span>
             </div>
-
-            {{-- Réservées --}}
-            <div class="stat-card stat-reserved">
-                <span class="stat-number">{{ $resources->where('status', 'reserved')->count() }}</span>
-                <span class="stat-label">Réservées</span>
+            <div>
+                <span>{{ $resources->where('status', 'reserved')->count() }}</span>
+                <span>Reservees</span>
             </div>
         </div>
     </div>
 
-    {{-- Table --}}
+    {{-- Tableau --}}
     @if($resources->isEmpty())
-        {{-- Aucune ressource --}}
-        <div class="empty-state">
+        <div>
             <h3>Aucune ressource</h3>
-            <p>Créez votre première ressource</p>
-            <a href="{{ route('resources.create') }}" class="btn btn-primary">
-                Créer ressource
-            </a>
+            <p>Creez votre premiere ressource</p>
+            <a href="{{ route('resources.create') }}">Creer ressource</a>
         </div>
     @else
-        {{-- Liste des ressources --}}
-        <div class="resources-table-container">
-            <table class="resources-table" id="resources-table">
+        <div>
+            <table id="resources-table">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nom</th>
-                        <th>Catégorie</th>
-                        <th>Spécifications</th>
+                        <th>Categorie</th>
+                        <th>Specifications</th>
                         <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Boucle ressources --}}
                     @foreach($resources as $resource)
-                    <tr class="resource-row"
-                        data-id="{{ $resource->id }}"
+                    <tr data-id="{{ $resource->id }}"
                         data-category="{{ $resource->category_id }}"
                         data-status="{{ $resource->status }}">
                         <td>{{ $resource->id }}</td>
-
-                        {{-- Nom --}}
                         <td>
-                            <div class="resource-name">{{ $resource->name }}</div>
-                            <div class="resource-category">{{ $resource->category->name ?? 'N/A' }}</div>
+                            <div>{{ $resource->name }}</div>
+                            <div>{{ $resource->category->name ?? 'N/A' }}</div>
                         </td>
-
-                        {{-- Catégorie --}}
                         <td>{{ $resource->category->name ?? 'N/A' }}</td>
-
-                        {{-- Spécifications --}}
                         <td>
-                            <div class="resource-specs">
-                                <div class="spec-item">
-                                    <span class="spec-label">CPU:</span>
-                                    <span class="spec-value">{{ $resource->cpu }} cores</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">RAM:</span>
-                                    <span class="spec-value">{{ $resource->ram }} GB</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">Stockage:</span>
-                                    <span class="spec-value">{{ $resource->storage }} GB</span>
-                                </div>
-                            </div>
+                            CPU: {{ $resource->cpu }} cores<br>
+                            RAM: {{ $resource->ram }} GB<br>
+                            Stockage: {{ $resource->storage }} GB
                         </td>
-
-                        {{-- Statut --}}
                         <td>
-                            <span class="status-badge status-{{ $resource->status }}">
-                                {{ $resource->status }}
-                            </span>
+                            {{ $resource->status }}
                         </td>
-
-                        {{-- Actions --}}
-                        <td>
-                            <div class="resource-actions">
-                                {{-- Voir --}}
-                                <a href="{{ route('resources.show', $resource->id) }}"
-                                   class="action-btn action-btn-view">
-                                    Voir
-                                </a>
-
-                                {{-- Éditer --}}
-                                <a href="{{ route('resources.edit', $resource->id) }}"
-                                   class="action-btn action-btn-edit">
-                                    Éditer
-                                </a>
-
-                                {{-- Réserver --}}
-                                @if($resource->status == 'available')
-                                <a href="{{ route('reservations.create', ['resource_id' => $resource->id]) }}"
-                                   class="action-btn action-btn-reserve"
-                                   data-resource-id="{{ $resource->id }}"
-                                   data-resource-name="{{ $resource->name }}">
-                                    Réserver
-                                </a>
-                                @endif
-                            </div>
+                        <td class="resource-actions">
+                            <a href="{{ route('resources.show', $resource->id) }}">Voir</a>
+                            <a href="{{ route('resources.edit', $resource->id) }}">Editer</a>
+                            @if($resource->status == 'available')
+                            <a href="{{ route('reservations.create', ['resource_id' => $resource->id]) }}">Reserver</a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

@@ -18,7 +18,7 @@
 
     {{-- Formulaire --}}
     <div class="maintenance-form-card">
-        <form action="{{ route('maintenance.store') }}" method="POST" class="maintenance-form" id="maintenanceForm">
+        <form action="{{ route('maintenances.store') }}" method="POST" class="maintenance-form" id="maintenanceForm">
             @csrf
 
             {{-- SECTION 1: Ressource --}}
