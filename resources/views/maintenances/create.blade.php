@@ -69,17 +69,17 @@
                 <div class="form-group">
                     <label for="type" class="form-label">Type de maintenance *</label>
                     <select name="type" id="type" class="form-select" required>
-                        <option value="">-- Choisir un type --</option>
-                        <option value="preventive" {{ old('type') == 'preventive' ? 'selected' : '' }}>Maintenance préventive</option>
-                        <option value="corrective" {{ old('type') == 'corrective' ? 'selected' : '' }}>Maintenance corrective</option>
-                        <option value="emergency" {{ old('type') == 'emergency' ? 'selected' : '' }}>Maintenance d'urgence</option>
-                        <option value="upgrade" {{ old('type') == 'upgrade' ? 'selected' : '' }}>Mise à niveau</option>
-                    </select>
-                    @error('type')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+                    <option value="">-- Choisir un type --</option>
+                    <option value="preventive" {{ old('type') == 'preventive' ? 'selected' : '' }}>Préventive</option>
+                    <option value="corrective" {{ old('type') == 'corrective' ? 'selected' : '' }}>Corrective</option>
+                    <option value="urgence" {{ old('type') == 'urgence' ? 'selected' : '' }}>Urgence</option>
+                    <option value="mise_a_niveau" {{ old('type') == 'mise_a_niveau' ? 'selected' : '' }}>Mise à niveau</option>
+                </select>
+            @error('type')
+           <div class="error-message">{{ $message }}</div>
+          @enderror
+         </div>
+      
 
             {{-- SECTION 3: Dates --}}
             <div class="form-section">

@@ -126,12 +126,4 @@
         </div>
     </div>
 </div>
-@endsection
-    </div>
-</div>
-@endsection
-
-
-    
-</body>
-</html>
+@endsection {{-- هذا هو @endsection الوحيد المطلوب --}}

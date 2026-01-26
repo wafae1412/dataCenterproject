@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     // Ressources
     Route::resource('resources', ResourceController::class);
     Route::put('/resources/{resource}/status', [ResourceController::class, 'changeStatus'])->name('resources.changeStatus');
+    Route::post('/resources/{resource}/sync-maintenance', [ResourceController::class, 'syncMaintenance'])->name('resources.syncMaintenance');
 
     // Catégories
     Route::resource('categories', CategoryController::class);

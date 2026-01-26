@@ -5,57 +5,43 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Resource;
 use App\Models\Category;
+use App\Models\Maintenance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class ResourceController extends Controller
 {
-    /**
- * Afficher la liste des ressources avec possibilité de filtrage
- */
-public function index(Request $request)
-{
-    // Initialiser la requête avec la relation 'category' (pour éviter le problème N+1)
-    $query = Resource::with('category');
+    // Afficher liste ressources avec filtres
+    public function index(Request $request)
+    {
+        $query = Resource::with('category');
 
-    // Appliquer le filtre par catégorie si présent dans la requête
-    if ($request->category_id) {
-        $query->where('category_id', $request->category_id);
+        if ($request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $resources = $query->orderBy('created_at', 'desc')->get();
+        $categories = Category::all();
+
+        return view('resources.index', compact('resources', 'categories'));
     }
 
-    // Appliquer le filtre par statut si présent dans la requête
-    if ($request->status) {
-        $query->where('status', $request->status);
-    }
-
-    // Appliquer le filtre par recherche si présent dans la requête
-    if ($request->search) {
-        $query->where('name', 'like', '%' . $request->search . '%');
-    }
-
-    // Exécuter la requête et trier par date de création décroissante
-    $resources = $query->orderBy('created_at', 'desc')->get();
-
-    // Récupérer toutes les catégories pour le menu déroulant du filtre
-    $categories = Category::all();
-
-    // Passer les données à la vue
-    return view('resources.index', compact('resources', 'categories'));
-}
-
-
-    /**
-     * Afficher le formulaire de création
-     */
+    // Afficher formulaire création
     public function create()
     {
         $categories = Category::all();
         return view('resources.create', compact('categories'));
     }
 
-    /**
-     * Enregistrer une nouvelle ressource
-     */
+    // Enregistrer nouvelle ressource
     public function store(Request $request)
     {
         $request->validate([
@@ -83,27 +69,21 @@ public function index(Request $request)
             ->with('success', 'Ressource créée avec succès.');
     }
 
-    /**
-     * Afficher les détails d'une ressource
-     */
+    // Afficher détails ressource
     public function show(Resource $resource)
     {
         $resource->load(['category', 'reservations.user', 'maintenances']);
         return view('resources.show', compact('resource'));
     }
 
-    /**
-     * Afficher le formulaire d'édition
-     */
+    // Afficher formulaire édition
     public function edit(Resource $resource)
     {
         $categories = Category::all();
         return view('resources.edit', compact('resource', 'categories'));
     }
 
-    /**
-     * Mettre à jour une ressource
-     */
+    // Mettre à jour ressource
     public function update(Request $request, Resource $resource)
     {
         $request->validate([
@@ -123,12 +103,9 @@ public function index(Request $request)
             ->with('success', 'Ressource mise à jour avec succès.');
     }
 
-    /**
-     * Supprimer une ressource
-     */
+    // Supprimer ressource
     public function destroy(Resource $resource)
     {
-        // Vérifier s'il y a des réservations actives
         if ($resource->reservations()->where('status', 'active')->exists()) {
             return redirect()->back()
                 ->with('error', 'Impossible de supprimer une ressource avec des réservations actives.');
@@ -140,18 +117,93 @@ public function index(Request $request)
             ->with('success', 'Ressource supprimée avec succès.');
     }
 
-    /**
-     * Changer l'état d'une ressource
-     */
+    // Changer état ressource
     public function changeStatus(Request $request, Resource $resource)
     {
+        // Test: vérifier si la fonction est appelée
+        dd([
+            'test' => 'changeStatus fonctionne',
+            'resource_id' => $resource->id,
+            'statut_actuel' => $resource->status,
+            'nouveau_statut_demande' => $request->status,
+            'donnees_requete' => $request->all()
+        ]);
+
         $request->validate([
             'status' => 'required|in:available,reserved,maintenance,disabled'
         ]);
 
-        $resource->update(['status' => $request->status]);
+        $oldStatus = $resource->status;
+        $newStatus = $request->status;
+
+        $resource->update(['status' => $newStatus]);
+
+        $this->syncMaintenanceWithResource($resource, $oldStatus, $newStatus);
 
         return redirect()->back()
             ->with('success', 'Statut de la ressource mis à jour.');
     }
+
+    // Synchroniser maintenance avec ressource
+    private function syncMaintenanceWithResource(Resource $resource, $oldStatus, $newStatus)
+    {
+        // Si maintenance -> disponible
+        if ($oldStatus == 'maintenance' && $newStatus == 'available') {
+            $resource->maintenances()
+                ->whereIn('status', ['in_progress', 'scheduled'])
+                ->update([
+                    'status' => 'completed',
+                    'end_date' => now(),
+                    'updated_at' => now()
+                ]);
+        }
+
+        // Si devient en maintenance
+        elseif ($newStatus == 'maintenance') {
+            $activeMaintenance = $resource->maintenances()
+                ->whereIn('status', ['scheduled', 'in_progress'])
+                ->first();
+
+            if (!$activeMaintenance) {
+                Maintenance::create([
+                    'resource_id' => $resource->id,
+                    'title' => 'Maintenance automatique - ' . $resource->name,
+                    'description' => 'Maintenance déclenchée par changement de statut de la ressource',
+                    'type' => 'corrective',
+                    'start_date' => now(),
+                    'end_date' => now()->addHours(2),
+                    'estimated_duration' => 120,
+                    'notes' => 'Maintenance automatique créée suite au changement de statut',
+                    'status' => 'in_progress'
+                ]);
+            }
+        }
+
+        // Si devient désactivé
+        elseif ($newStatus == 'disabled') {
+            $resource->maintenances()
+                ->where('status', 'scheduled')
+                ->update(['status' => 'cancelled']);
+        }
+    }
+
+    // Synchroniser maintenance manuellement
+    public function syncMaintenance(Request $request, Resource $resource)
+    {
+        if ($resource->status == 'available') {
+            $updatedCount = $resource->maintenances()
+                ->whereIn('status', ['in_progress', 'scheduled'])
+                ->update([
+                    'status' => 'completed',
+                    'end_date' => now()
+                ]);
+
+            return redirect()->back()
+                ->with('success', $updatedCount . ' maintenance(s) synchronisée(s) avec succès.');
+        }
+
+        return redirect()->back()
+            ->with('info', 'La ressource n\'est pas en maintenance.');
+    }
 }
+
