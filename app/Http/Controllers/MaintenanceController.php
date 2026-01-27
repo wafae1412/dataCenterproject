@@ -51,8 +51,8 @@ class MaintenanceController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'type' => 'required|in:preventive,corrective,emergency,upgrade',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'start_date' => 'required|date_format:Y-m-d\TH:i',
+            'end_date' => 'required|date_format:Y-m-d\TH:i|after:start_date',
             'estimated_duration' => 'nullable|integer|min:1|max:720',
             'notes' => 'nullable|string',
         ]);
@@ -65,7 +65,8 @@ class MaintenanceController extends Controller
 
         // Mise à jour du statut de la ressource
         $resource = Resource::findOrFail($validated['resource_id']);
-        $resource->update(['status' => 'maintenance']);
+        $resource->status = 'maintenance';
+        $resource->save(); // Force la sauvegarde
 
         // Redirection avec message de succès
         return redirect()->route('maintenances.index')

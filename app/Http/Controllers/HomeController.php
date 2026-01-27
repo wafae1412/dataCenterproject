@@ -33,7 +33,12 @@ class HomeController extends Controller
         return redirect('/responsable/dashboard');
     }
 
-    return view('home');
+    if ($role === 'Guest') {
+        return redirect('/dashboard');
+    }
+
+    // User par défaut
+    return redirect('/dashboard');
 }
 
 }

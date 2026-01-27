@@ -93,26 +93,24 @@ function updateEndDate(startInput, endInput) {
  * Vérifier la validité des dates
  */
 function checkDates(startInput, endInput) {
-    if (startInput.value && endInput.value) {
-        const start = new Date(startInput.value);
-        const end = new Date(endInput.value);
+    if (!startInput.value || !endInput.value) {
+        return true; // Accepter si vides
+    }
+    
+    const start = new Date(startInput.value);
+    const end = new Date(endInput.value);
 
-        // Vérifier que la fin est après le début
-        if (end <= start) {
-            alert('Erreur: La date de fin doit être après la date de début.');
-            endInput.value = '';
-            endInput.focus();
+    // Vérifier que la fin est après le début
+    if (end <= start) {
+        alert('Erreur: La date de fin doit être après la date de début.');
+        return false;
+    }
+
+    // Vérifier si trop longue (> 30 jours)
+    const days = (end - start) / (1000 * 60 * 60 * 24);
+    if (days > 30) {
+        if (!confirm('Attention: Cette maintenance dure plus de 30 jours. Continuer?')) {
             return false;
-        }
-
-        // Vérifier si trop longue (> 30 jours)
-        const days = (end - start) / (1000 * 60 * 60 * 24);
-        if (days > 30) {
-            if (!confirm('Attention: Cette maintenance dure plus de 30 jours. Continuer?')) {
-                endInput.value = '';
-                endInput.focus();
-                return false;
-            }
         }
     }
     return true;
@@ -123,11 +121,12 @@ function checkDates(startInput, endInput) {
  */
 function validateForm(form, resourceSelect, startInput, endInput) {
     let isValid = true;
+    let firstInvalidField = null;
 
     // Vérifier la ressource
     if (resourceSelect && !resourceSelect.value) {
         alert('Veuillez sélectionner une ressource.');
-        resourceSelect.focus();
+        if (!firstInvalidField) firstInvalidField = resourceSelect;
         isValid = false;
     }
 
@@ -135,7 +134,7 @@ function validateForm(form, resourceSelect, startInput, endInput) {
     const titleInput = document.getElementById('title');
     if (titleInput && !titleInput.value.trim()) {
         alert('Le titre est obligatoire.');
-        titleInput.focus();
+        if (!firstInvalidField) firstInvalidField = titleInput;
         isValid = false;
     }
 
@@ -143,13 +142,29 @@ function validateForm(form, resourceSelect, startInput, endInput) {
     const typeSelect = document.getElementById('type');
     if (typeSelect && !typeSelect.value) {
         alert('Veuillez sélectionner un type de maintenance.');
-        typeSelect.focus();
+        if (!firstInvalidField) firstInvalidField = typeSelect;
         isValid = false;
     }
 
     // Vérifier les dates
-    if (!checkDates(startInput, endInput)) {
+    if (!startInput.value) {
+        alert('La date de début est obligatoire.');
+        if (!firstInvalidField) firstInvalidField = startInput;
         isValid = false;
+    }
+    
+    if (!endInput.value) {
+        alert('La date de fin est obligatoire.');
+        if (!firstInvalidField) firstInvalidField = endInput;
+        isValid = false;
+    }
+
+    if (isValid && !checkDates(startInput, endInput)) {
+        isValid = false;
+    }
+
+    if (!isValid && firstInvalidField) {
+        firstInvalidField.focus();
     }
 
     return isValid;

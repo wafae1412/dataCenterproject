@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -34,7 +35,7 @@ class UserController extends Controller
 public function create()
 {
     $roles = Role::all();
-    return view('admin.users.create', compact('roles'));
+    return view('admin.create-user', compact('roles'));
 }
 
 public function store(Request $request)

@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         CategoriesSeeder::class,
         UsersSeeder::class,
         ResourcesSeeder::class,
+        MaintenanceSeeder::class,
     ]);
 }
 }

@@ -14,8 +14,10 @@
         <a href="#">DataCenter</a>
 
         @auth
-            <a href="/notifications">Notifications</a>
-            <a href="/maintenances">Maintenances</a>
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <a href="{{ route('notifications.index') }}">Notifications</a>
+            <a href="{{ route('maintenances.index') }}">Maintenances</a>
+            <a href="{{ route('resources.index') }}">Ressources</a>
 
             @if(auth()->user()->role->name === 'Admin')
                 <a href="/admin/dashboard">Admin Dashboard</a>
@@ -39,15 +41,21 @@
     </div>
 </nav>
 
-<div class="container">
+@if(Route::current()->getName() === 'login' || Route::current()->getName() === 'register')
     @yield('content')
-</div>
+@else
+    <div style="max-width: 1200px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        @yield('content')
+    </div>
+@endif
 
 <script>
 function toggleDark() {
     document.body.classList.toggle('dark');
 }
 </script>
+
+@yield('scripts')
 
 </body>
 </html>

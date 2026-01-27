@@ -14,7 +14,7 @@ class ResourceController extends Controller
     // Afficher liste ressources avec filtres
     public function index(Request $request)
     {
-        $query = Resource::with('category');
+        $query = Resource::with('category', 'maintenances');
 
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);

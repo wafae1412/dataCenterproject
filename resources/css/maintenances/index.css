@@ -1,0 +1,101 @@
+/* Maintenance Index CSS - Style simple */
+
+/* Conteneur principal */
+.maintenance-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Titre */
+.maintenance-page h1 {
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+
+/* Total */
+.total-count {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Message de succès */
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #c3e6cb;
+}
+
+/* Bouton nouvelle maintenance */
+.new-maintenance-btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.new-maintenance-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Tableau */
+.maintenance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.maintenance-table th {
+    background-color: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+    font-weight: bold;
+}
+
+.maintenance-table td {
+    padding: 10px 12px;
+    border: 1px solid #dee2e6;
+}
+
+/* Ligne sur survol */
+.maintenance-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Lien retour */
+.back-link {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.back-link a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .maintenance-table {
+        font-size: 14px;
+    }
+    
+    .maintenance-table th,
+    .maintenance-table td {
+        padding: 8px;
+    }
+}

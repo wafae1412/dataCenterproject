@@ -1,103 +1,91 @@
-@extends('layouts.app') {{-- Layout principal --}}
-
-@section('title', $category->name) {{-- Titre de la page --}}
-
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/categories/show.css') }}"> {{-- CSS spécifique --}}
-@endsection
+@extends('layouts.app')
 
 @section('content')
-<div class="categories-show">
-    {{-- En-tête de la page --}}
-    <div class="page-header">
-        <div class="header-info">
-            <h1>{{ $category->name }}</h1>
-            <div class="category-meta">
-                {{-- ID de la catégorie --}}
-                <span class="badge">ID: {{ $category->id }}</span>
 
-                {{-- Date de création avec vérification null --}}
-                <span class="created-date">Créée le: {{ $category->created_at?->format('d/m/Y') ?? 'Date inconnue' }}</span>
+<div style="max-width: 1200px; margin: 2rem auto; padding: 2rem;">
+    <!-- En-tête -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;">
+        <div>
+            <h1 style="color: #0a2a43; margin: 0 0 1rem 0;">{{ $category->name }}</h1>
+            
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <span style="display: inline-block; background-color: #3429d3; color: white; padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.85rem;">
+                    ID: {{ $category->id }}
+                </span>
+                <span style="display: inline-block; color: #6b7280; padding: 0.5rem 1rem; font-size: 0.85rem;">
+                    Créée le: {{ $category->created_at?->format('d/m/Y') ?? 'Date inconnue' }}
+                </span>
             </div>
         </div>
 
-        {{-- Boutons d'action --}}
-        <div class="header-actions">
-            {{-- Modifier la catégorie (LIEN DIRECT) --}}
-            <a href="/categories/{{ $category->id }}/edit" class="btn edit">Modifier</a>
-
-            {{-- Retour à la liste (LIEN DIRECT) --}}
-            <a href="/categories" class="btn secondary">Retour</a>
+        <!-- Boutons d'action -->
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{{ route('categories.edit', $category->id) }}" style="padding: 0.5rem 1rem; background-color: #f59e0b; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Modifier</a>
+            <a href="{{ route('categories.index') }}" style="padding: 0.5rem 1rem; background-color: #6b7280; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Retour</a>
         </div>
     </div>
 
-    {{-- Contenu principal --}}
-    <div class="category-content">
-        {{-- Section des ressources --}}
-        <div class="resources-section">
-            <h2>Ressources ({{ $category->resources->count() }})</h2>
+    <!-- Ressources -->
+    <div style="background: white; border-radius: 10px; padding: 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #0a2a43; margin-top: 0;">Ressources ({{ $category->resources->count() }})</h2>
 
-            {{-- Si aucune ressource --}}
-            @if($category->resources->isEmpty())
-            <div class="empty-resources">
-                <p>Aucune ressource dans cette catégorie</p>
-                {{-- Ajouter une ressource (LIEN DIRECT) --}}
-                <a href="/resources/create" class="btn small primary">Ajouter une ressource</a>
+        @if($category->resources->isEmpty())
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #6b7280; margin-bottom: 1rem;">Aucune ressource dans cette catégorie</p>
+                <a href="{{ route('resources.create') }}" style="display: inline-block; padding: 0.5rem 1rem; background-color: #3429d3; color: white; text-decoration: none; border-radius: 6px;">Ajouter une ressource</a>
             </div>
-            @else
-            {{-- Grille des ressources --}}
-            <div class="resources-grid">
-                {{-- Boucle sur les ressources --}}
+        @else
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
                 @foreach($category->resources as $resource)
-                <div class="resource-card">
-                    {{-- Nom de la ressource --}}
-                    <h3>{{ $resource->name }}</h3>
+                    <div style="background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 1.5rem; border-top: 4px solid #3429d3;">
+                        <h3 style="margin: 0 0 1rem 0; color: #0a2a43;">{{ $resource->name }}</h3>
 
-                    {{-- Spécifications --}}
-                    <div class="resource-specs">
-                        <div class="spec">
-                            <span class="spec-label">CPU:</span>
-                            <span class="spec-value">{{ $resource->cpu }} cores</span>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; padding: 1rem 0; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                <span style="font-weight: 600; color: #6b7280; min-width: 50px;">CPU:</span>
+                                <span>{{ $resource->cpu }} cores</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                <span style="font-weight: 600; color: #6b7280; min-width: 50px;">RAM:</span>
+                                <span>{{ $resource->ram }} GB</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                <span style="font-weight: 600; color: #6b7280; min-width: 50px;">Stockage:</span>
+                                <span>{{ $resource->storage }} GB</span>
+                            </div>
                         </div>
-                        <div class="spec">
-                            <span class="spec-label">RAM:</span>
-                            <span class="spec-value">{{ $resource->ram }} GB</span>
+
+                        <div style="margin-bottom: 1rem;">
+                            <span style="display: inline-block; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+                                @if($resource->status == 'available') background-color: #d1fae5; color: #065f46;
+                                @elseif($resource->status == 'reserved') background-color: #fecaca; color: #7f1d1d;
+                                @elseif($resource->status == 'maintenance') background-color: #fef3c7; color: #92400e;
+                                @else background-color: #e5e7eb; color: #374151;
+                                @endif
+                            ">
+                                {{ ucfirst($resource->status) }}
+                            </span>
                         </div>
-                        <div class="spec">
-                            <span class="spec-label">Stockage:</span>
-                            <span class="spec-value">{{ $resource->storage }} GB</span>
+
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{{ route('resources.show', $resource->id) }}" style="flex: 1; padding: 0.5rem 1rem; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; font-size: 0.85rem;">Voir</a>
+                            <a href="{{ route('resources.edit', $resource->id) }}" style="flex: 1; padding: 0.5rem 1rem; background-color: #f59e0b; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; font-size: 0.85rem;">Modifier</a>
                         </div>
                     </div>
-
-                    {{-- Statut de la ressource --}}
-                    <div class="resource-status {{ $resource->status }}">
-                        {{ ucfirst($resource->status) }}
-                    </div>
-
-                    {{-- Actions sur la ressource (LIENS DIRECTS) --}}
-                    <div class="resource-actions">
-                        <a href="/resources/{{ $resource->id }}" class="btn small view">Voir</a>
-                        <a href="/resources/{{ $resource->id }}/edit" class="btn small edit">Modifier</a>
-                    </div>
-                </div>
                 @endforeach
             </div>
-            @endif
-        </div>
+        @endif
+    </div>
 
-        {{-- Actions sur la catégorie --}}
-        <div class="category-actions">
-            {{-- Formulaire de suppression (LIEN DIRECT) --}}
-            <form action="/categories/{{ $category->id }}" method="POST"
-                  onsubmit="return confirm('Supprimer cette catégorie et toutes ses ressources?')">
-                @csrf @method('DELETE')
-                <button type="submit" class="btn delete">Supprimer la Catégorie</button>
-            </form>
-        </div>
+    <!-- Actions sur la catégorie -->
+    <div style="background: white; border-radius: 10px; padding: 2rem; margin-top: 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #0a2a43; margin-top: 0;">Actions</h2>
+        <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+              onsubmit="return confirm('Supprimer cette catégorie et toutes ses ressources?')">
+            @csrf @method('DELETE')
+            <button type="submit" style="padding: 0.75rem 1.5rem; background-color: #ef4444; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Supprimer la Catégorie</button>
+        </form>
     </div>
 </div>
-@endsection
 
-@section('scripts')
-<script src="{{ asset('js/categories/show.js') }}"></script> {{-- JavaScript spécifique --}}
 @endsection

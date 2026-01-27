@@ -2,207 +2,175 @@
 
 @section('title', $resource->name ?? 'Ressource')
 
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/resources/show.css') }}">
-@endsection
-
 @section('content')
-<div class="resources-show">
-    {{-- En-tête --}}
-    <div class="page-header">
-        <div class="header-info">
-            <h1>{{ $resource->name ?? 'Ressource sans nom' }}</h1>
 
-            <div class="resource-meta">
-                <span class="badge">ID: {{ $resource->id ?? 'N/A' }}</span>
-
-                {{-- Catégorie avec vérification --}}
-                <span class="category-badge">
-                    {{ $resource->category->name ?? 'Non catégorisé' }}
+<div style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+    {{-- Header --}}
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
+        <div>
+            <h1 style="color: #0a2a43; margin: 0 0 15px 0;">{{ $resource->name ?? 'Ressource' }}</h1>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <span style="background-color: #3429d3; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px;">
+                    ID: {{ $resource->id }}
                 </span>
-
-                {{-- Statut --}}
-                <span class="status-badge {{ $resource->status ?? 'unknown' }}">
-                    {{ $resource->status ?? 'Inconnu' }}
+                <span style="background-color: #6b7280; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px;">
+                    {{ $resource->category->name ?? 'N/A' }}
                 </span>
-
-                <span class="created-date">
-                    Créée le: {{ $resource->created_at?->format('d/m/Y') ?? 'Date inconnue' }}
+                <span style="padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;
+                    @if($resource->status == 'available') background-color: #d1fae5; color: #065f46;
+                    @elseif($resource->status == 'reserved') background-color: #fecaca; color: #7f1d1d;
+                    @elseif($resource->status == 'maintenance') background-color: #fef3c7; color: #92400e;
+                    @else background-color: #e5e7eb; color: #374151;
+                    @endif
+                ">
+                    {{ ucfirst($resource->status) }}
                 </span>
             </div>
         </div>
 
-        {{-- Actions --}}
-        <div class="header-actions">
-            <a href="{{ route('resources.edit', $resource) }}" class="btn edit">
-                Modifier
-            </a>
-
-            {{-- Réserver seulement si disponible --}}
-            @if(($resource->status ?? '') == 'available')
-                <a href="{{ route('reservations.create', ['resource_id' => $resource->id]) }}"
-                   class="btn reserve">
-                    Réserver
-                </a>
+        <div style="display: flex; gap: 10px;">
+            @if(auth()->user()->isAdmin() || auth()->user()->isResponsable())
+                <a href="{{ route('resources.edit', $resource->id) }}" style="padding: 10px 20px; background-color: #f59e0b; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Éditer</a>
             @endif
-
-            <a href="{{ route('resources.index') }}" class="btn secondary">
-                Retour
-            </a>
+            @if($resource->status == 'available')
+                @if(auth()->user()->role->name !== 'Guest')
+                    <a href="{{ route('reservations.create', ['resource_id' => $resource->id]) }}" style="padding: 10px 20px; background-color: #10b981; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Réserver</a>
+                @endif
+            @endif
+            <a href="{{ route('resources.index') }}" style="padding: 10px 20px; background-color: #6b7280; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Retour</a>
         </div>
     </div>
 
-    {{-- Contenu principal --}}
-    <div class="resource-content">
-        {{-- Spécifications --}}
-        <div class="resource-grid">
-            <div class="specs-card">
-                <h2>Spécifications Techniques</h2>
-                <div class="specs-list">
-                    <div class="spec-item">
-                        <span class="spec-label">CPU:</span>
-                        <span class="spec-value">{{ $resource->cpu ?? 'N/A' }} cores</span>
-                    </div>
-
-                    <div class="spec-item">
-                        <span class="spec-label">RAM:</span>
-                        <span class="spec-value">{{ $resource->ram ?? 'N/A' }} GB</span>
-                    </div>
-
-                    <div class="spec-item">
-                        <span class="spec-label">Stockage:</span>
-                        <span class="spec-value">{{ $resource->storage ?? 'N/A' }} GB</span>
-                    </div>
-
-                    <div class="spec-item">
-                        <span class="spec-label">Localisation:</span>
-                        <span class="spec-value">{{ $resource->location ?? 'Non spécifiée' }}</span>
-                    </div>
-
-                    <div class="spec-item">
-                        <span class="spec-label">Catégorie:</span>
-                        <span class="spec-value">{{ $resource->category->name ?? 'N/A' }}</span>
-                    </div>
-                </div>
+    {{-- Spécifications --}}
+    <div style="background-color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #0a2a43; margin-top: 0;">Spécifications Techniques</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div>
+                <label style="display: block; font-weight: 600; color: #6b7280; font-size: 12px; text-transform: uppercase; margin-bottom: 5px;">CPU</label>
+                <div style="font-size: 18px; font-weight: bold; color: #0a2a43;">{{ $resource->cpu ?? 'N/A' }} cores</div>
             </div>
-
-            <div class="description-card">
-                <h2>Description</h2>
-                <div class="description-content">
-                    {{ $resource->description ?? 'Aucune description disponible.' }}
-                </div>
+            
+            <div>
+                <label style="display: block; font-weight: 600; color: #6b7280; font-size: 12px; text-transform: uppercase; margin-bottom: 5px;">RAM</label>
+                <div style="font-size: 18px; font-weight: bold; color: #0a2a43;">{{ $resource->ram ?? 'N/A' }} GB</div>
+            </div>
+            
+            <div>
+                <label style="display: block; font-weight: 600; color: #6b7280; font-size: 12px; text-transform: uppercase; margin-bottom: 5px;">Stockage</label>
+                <div style="font-size: 18px; font-weight: bold; color: #0a2a43;">{{ $resource->storage ?? 'N/A' }} GB</div>
+            </div>
+            
+            <div>
+                <label style="display: block; font-weight: 600; color: #6b7280; font-size: 12px; text-transform: uppercase; margin-bottom: 5px;">Localisation</label>
+                <div style="font-size: 18px; font-weight: bold; color: #0a2a43;">{{ $resource->location ?? 'Non spécifiée' }}</div>
             </div>
         </div>
 
-        {{-- Réservations --}}
-        <div class="reservations-section">
-            <h2>Réservations
-                @if(isset($resource->reservations))
-                    ({{ $resource->reservations->count() }})
+        @if($resource->description)
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <h3 style="color: #0a2a43; margin-top: 0;">Description</h3>
+            <p style="color: #6b7280; line-height: 1.6;">{{ $resource->description }}</p>
+        </div>
+        @endif
+    </div>
+
+    {{-- Réservations --}}
+    @if($resource->reservations && $resource->reservations->count() > 0)
+    <div style="background-color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #0a2a43; margin-top: 0;">Réservations ({{ $resource->reservations->count() }})</h2>
+        
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb;">
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Utilisateur</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Début</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Fin</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($resource->reservations as $reservation)
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 12px;">{{ $reservation->user->name ?? 'N/A' }}</td>
+                    <td style="padding: 12px;">{{ $reservation->date_start ? $reservation->date_start->format('d/m/Y H:i') : 'N/A' }}</td>
+                    <td style="padding: 12px;">{{ $reservation->date_end ? $reservation->date_end->format('d/m/Y H:i') : 'N/A' }}</td>
+                    <td style="padding: 12px;">
+                        <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+                            @if($reservation->status == 'pending') background-color: #fef3c7; color: #92400e;
+                            @elseif($reservation->status == 'approved') background-color: #d1fae5; color: #065f46;
+                            @elseif($reservation->status == 'rejected') background-color: #fee2e2; color: #7f1d1d;
+                            @else background-color: #dbeafe; color: #0c2340;
+                            @endif
+                        ">
+                            {{ ucfirst($reservation->status) }}
+                        </span>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endif
+
+    {{-- Maintenances --}}
+    <div style="background-color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color: #0a2a43; margin: 0;">Maintenances</h2>
+            @if(auth()->user()->isAdmin() || auth()->user()->isResponsable())
+                @php
+                    $hasActiveMaintenance = $resource->maintenances()->whereIn('status', ['scheduled', 'in_progress'])->exists();
+                @endphp
+                @if(!$hasActiveMaintenance)
+                    <a href="{{ route('maintenances.create', ['resource_id' => $resource->id]) }}" style="padding: 10px 20px; background-color: #3429d3; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">+ Planifier</a>
+                @else
+                    <span style="padding: 10px 20px; background-color: #9ca3af; color: white; border-radius: 6px; font-weight: 600; display: inline-block; cursor: not-allowed;">Maintenance en cours</span>
                 @endif
-            </h2>
-
-            {{-- Vérifier si des réservations existent --}}
-            @if(!isset($resource->reservations) || $resource->reservations->isEmpty())
-                <div class="empty-reservations">
-                    <p>Aucune réservation pour cette ressource</p>
-
-                    @if(($resource->status ?? '') == 'available')
-                        <a href="{{ route('reservations.create', ['resource_id' => $resource->id]) }}"
-                           class="btn primary">
-                            Faire une réservation
-                        </a>
-                    @endif
-                </div>
-            @else
-                {{-- Afficher le tableau des réservations --}}
-                <div class="reservations-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Utilisateur</th>
-                                <th>Date début</th>
-                                <th>Date fin</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{-- Boucle sécurisée --}}
-                            @foreach($resource->reservations->sortByDesc('date_start') as $reservation)
-                            <tr>
-                                <td>{{ $reservation->user->name ?? 'Utilisateur inconnu' }}</td>
-                                <td>{{ $reservation->date_start?->format('d/m/Y H:i') ?? 'Non définie' }}</td>
-                                <td>{{ $reservation->date_end?->format('d/m/Y H:i') ?? 'Non définie' }}</td>
-                                <td>
-                                    <span class="reservation-status {{ $reservation->status ?? 'unknown' }}">
-                                        {{ $reservation->status ?? 'Inconnu' }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
             @endif
         </div>
-
-        {{-- MAINTENANCE - SECTION CRITIQUE --}}
-        <div class="maintenance-section">
-            <h2>Maintenance</h2>
-
-            {{-- Boutons d'action --}}
-            <div class="maintenance-actions">
-                {{-- Bouton pour planifier maintenance --}}
-                @if(auth()->check())
-                    <a href="{{ route('maintenance.create', $resource) }}" class="btn primary">
-                        Planifier une maintenance
-                    </a>
-                @endif
-
-                {{-- Bouton pour voir l'historique --}}
-                <a href="{{ route('maintenances.index') }}" class="btn secondary">
-                    Voir l'historique
-                </a>
-            </div>
-
-            {{-- Historique des maintenances --}}
-            <h3>Historique des maintenances</h3>
-
-            {{-- Vérifier si des maintenances existent --}}
-            @if(isset($resource->maintenances) && $resource->maintenances && $resource->maintenances->isNotEmpty())
-                <div class="maintenance-list">
-                    @foreach($resource->maintenances->sortByDesc('date_start') as $maintenance)
-                    <div class="maintenance-item">
-                        <div class="maintenance-date">
-                            {{ $maintenance->date_start?->format('d/m/Y') ?? 'Date inconnue' }} -
-                            {{ $maintenance->date_end?->format('d/m/Y') ?? 'Date inconnue' }}
-                        </div>
-                        <div class="maintenance-desc">
-                            {{ $maintenance->description ?? 'Pas de description' }}
-                        </div>
-                    </div>
+        
+        @if($resource->maintenances && $resource->maintenances->count() > 0)
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background-color: #f3f4f6; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Titre</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Type</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Début</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Fin</th>
+                        <th style="padding: 12px; text-align: left; font-weight: 600;">Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($resource->maintenances as $maintenance)
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 12px;">
+                            <a href="{{ route('maintenances.show', $maintenance->id) }}" style="color: #3429d3; text-decoration: none;">
+                                {{ $maintenance->title }}
+                            </a>
+                        </td>
+                        <td style="padding: 12px;">{{ ucfirst($maintenance->type) }}</td>
+                        <td style="padding: 12px;">{{ $maintenance->start_date ? $maintenance->start_date->format('d/m/Y H:i') : 'N/A' }}</td>
+                        <td style="padding: 12px;">{{ $maintenance->end_date ? $maintenance->end_date->format('d/m/Y H:i') : 'N/A' }}</td>
+                        <td style="padding: 12px;">
+                            <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+                                @if($maintenance->status == 'scheduled') background-color: #fef3c7; color: #92400e;
+                                @elseif($maintenance->status == 'in_progress') background-color: #dbeafe; color: #0c2340;
+                                @elseif($maintenance->status == 'completed') background-color: #d1fae5; color: #065f46;
+                                @else background-color: #fee2e2; color: #7f1d1d;
+                                @endif
+                            ">
+                                {{ ucfirst($maintenance->status) }}
+                            </span>
+                        </td>
+                    </tr>
                     @endforeach
-                </div>
-            @else
-                <p class="no-maintenance">Aucune maintenance enregistrée.</p>
-            @endif
-        </div>
-
-        {{-- Actions de suppression --}}
-        <div class="resource-actions">
-            <form action="{{ route('resources.destroy', $resource) }}" method="POST"
-                  onsubmit="return confirm('Supprimer cette ressource ? Toutes les réservations seront annulées.')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn delete">
-                    Supprimer la ressource
-                </button>
-            </form>
-        </div>
+                </tbody>
+            </table>
+        @else
+            <p style="color: #6b7280; text-align: center; padding: 20px;">Aucune maintenance planifiée.</p>
+        @endif
     </div>
 </div>
-@endsection
 
-@section('scripts')
-<script src="{{ asset('js/resources/show.js') }}"></script>
 @endsection

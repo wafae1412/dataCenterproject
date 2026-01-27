@@ -1,61 +1,50 @@
 @extends('layouts.app')
 
-@section('title', 'Modifier la Catégorie')
-
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/categories/edit.css') }}">
-@endsection
-
 @section('content')
-<div class="categories-edit">
-    <div class="page-header">
-        <h1>Modifier la Catégorie: {{ $category->name }}</h1>
-        <div class="header-actions">
-            <a href="{{ route('categories.show', $category) }}" class="btn view">Voir</a>
-            <a href="{{ route('categories.index') }}" class="btn secondary">Retour</a>
-        </div>
+
+<div style="max-width: 800px; margin: 2rem auto; padding: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;">
+        <h1 style="color: #0a2a43; margin: 0;">Modifier la Catégorie: {{ $category->name }}</h1>
+        <a href="{{ route('categories.index') }}" style="padding: 0.75rem 1.5rem; background-color: #6b7280; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Retour</a>
     </div>
 
-    <div class="form-container">
-        <form action="{{ route('categories.update', $category) }}" method="POST" id="category-edit-form">
+    <div style="background: white; border-radius: 10px; padding: 2rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <form action="{{ route('categories.update', $category) }}" method="POST">
             @csrf @method('PUT')
 
-            <div class="form-group">
-                <label for="name">Nom de la catégorie *</label>
-                <input type="text" id="name" name="name"
-                       value="{{ old('name', $category->name) }}"
-                       required
-                       placeholder="Nom de la catégorie">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1f2937;">
+                    Nom de la catégorie <span style="color: #ef4444;">*</span>
+                </label>
+                <input type="text" name="name" value="{{ old('name', $category->name) }}" required
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 6px; font-family: inherit; font-size: 0.95rem;">
                 @error('name')
-                <div class="error-message">{{ $message }}</div>
+                <div style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="resource-count">
-                <h3>Ressources associées: {{ $category->resources->count() }}</h3>
+            <div style="margin-bottom: 2rem; padding: 1rem; background-color: #f9fafb; border-radius: 6px; border-left: 4px solid #3429d3;">
+                <h3 style="color: #0a2a43; margin-top: 0;">Ressources associées: {{ $category->resources->count() }}</h3>
                 @if($category->resources->count() > 0)
-                <ul class="resources-list">
-                    @foreach($category->resources->take(5) as $resource)
-                    <li>{{ $resource->name }}</li>
-                    @endforeach
-                    @if($category->resources->count() > 5)
-                    <li>... et {{ $category->resources->count() - 5 }} autres</li>
-                    @endif
-                </ul>
+                    <ul style="margin-left: 1.5rem; color: #1f2937;">
+                        @foreach($category->resources->take(5) as $resource)
+                            <li style="margin-bottom: 0.5rem;">{{ $resource->name }}</li>
+                        @endforeach
+                        @if($category->resources->count() > 5)
+                            <li>... et {{ $category->resources->count() - 5 }} autres</li>
+                        @endif
+                    </ul>
                 @else
-                <p class="no-resources">Aucune ressource dans cette catégorie</p>
+                    <p style="color: #6b7280; margin: 0;">Aucune ressource dans cette catégorie</p>
                 @endif
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn primary">Mettre à jour</button>
-                <a href="{{ route('categories.index') }}" class="btn cancel">Annuler</a>
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" style="flex: 1; padding: 0.75rem 1.5rem; background-color: #3429d3; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Mettre à jour</button>
+                <a href="{{ route('categories.index') }}" style="flex: 1; padding: 0.75rem 1.5rem; background-color: #6b7280; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center;">Annuler</a>
             </div>
         </form>
     </div>
 </div>
-@endsection
 
-@section('scripts')
-<script src="{{ asset('js/categories/edit.js') }}"></script>
 @endsection

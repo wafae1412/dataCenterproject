@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Resource;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -12,47 +13,100 @@ use Carbon\Carbon;
 class DashboardController extends Controller
 {
     /**
-     * Afficher le dashboard utilisateur
+     * Afficher le dashboard selon le rôle
      */
     public function index()
     {
         $user = Auth::user();
-
-        if ($user->isAdmin()) {
+        
+        // Vérifier le rôle
+        if ($user->role->name === 'Admin') {
             return $this->adminDashboard();
-        } elseif ($user->isResponsable()) {
+        } elseif ($user->role->name === 'Responsable') {
             return $this->responsableDashboard();
+        } elseif ($user->role->name === 'Guest') {
+            return $this->guestDashboard();
         } else {
             return $this->userDashboard();
         }
     }
 
     /**
-     * Dashboard Admin avec statistiques globales
+     * Dashboard Admin
      */
     private function adminDashboard()
     {
+        // 1. Statistiques RESSOURCES
+        $total_resources = Resource::count();
+        $available_resources = Resource::where('status', 'available')->count();
+        $reserved_resources = Resource::where('status', 'reserved')->count(); // CHANGÉ: 'reserved' pas 'occupied'
+        $maintenance_resources = Resource::where('status', 'maintenance')->count(); // ⭐ IMPORTANT
+        
+        // 2. Statistiques MAINTENANCE
+        $active_maintenances_count = Maintenance::whereIn('status', ['scheduled', 'in_progress'])->count();
+        $upcoming_maintenances_count = Maintenance::where('start_date', '>', now())
+            ->where('status', 'scheduled')
+            ->count();
+        
+        // 3. Statistiques UTILISATEURS
+        $total_users = User::count();
+        
+        // 4. Statistiques RÉSERVATIONS
+        $total_reservations = Reservation::count();
+        $pending_reservations = Reservation::where('status', 'pending')->count();
+        $active_reservations = Reservation::where('status', 'active')->count();
+        $finished_reservations = Reservation::where('status', 'finished')->count();
+        
+        // 5. Calcul des pourcentages
+        $occupation_rate = $total_resources > 0 ? round(($reserved_resources / $total_resources) * 100, 2) : 0;
+        $maintenance_percentage = $total_resources > 0 ? round(($maintenance_resources / $total_resources) * 100, 2) : 0;
+        
+        // 6. Tableau des stats
         $stats = [
-            'total_resources' => Resource::count(),
-            'available_resources' => Resource::where('status', 'available')->count(),
-            'occupied_resources' => Resource::where('status', 'occupied')->count(),
-            'maintenance_resources' => Resource::where('status', 'maintenance')->count(),
-            'total_users' => User::count(),
-            'total_reservations' => Reservation::count(),
-            'pending_reservations' => Reservation::where('status', 'pending')->count(),
-            'active_reservations' => Reservation::where('status', 'active')->count(),
-            'finished_reservations' => Reservation::where('status', 'finished')->count(),
-            'occupation_rate' => $this->calculateOccupationRate(),
+            // Ressources
+            'total_resources' => $total_resources,
+            'available_resources' => $available_resources,
+            'reserved_resources' => $reserved_resources, // CHANGÉ
+            'maintenance_resources' => $maintenance_resources, // AJOUTÉ
+            
+            // Maintenance
+            'active_maintenances' => $active_maintenances_count,
+            'upcoming_maintenances' => $upcoming_maintenances_count,
+            'maintenance_percentage' => $maintenance_percentage,
+            
+            // Utilisateurs
+            'total_users' => $total_users,
+            
+            // Réservations
+            'total_reservations' => $total_reservations,
+            'pending_reservations' => $pending_reservations,
+            'active_reservations' => $active_reservations,
+            'finished_reservations' => $finished_reservations,
+            
+            // Pourcentages
+            'occupation_rate' => $occupation_rate,
         ];
-
+        
+        // 7. Données pour affichage
+        $active_maintenances = Maintenance::with('resource')
+            ->whereIn('status', ['scheduled', 'in_progress'])
+            ->orderBy('start_date', 'asc')
+            ->get();
+            
         $recent_reservations = Reservation::with(['user', 'resource'])
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
-
+            
         $resources = Resource::with('category')->get();
         
-        return view('admin.dashboard', compact('stats', 'recent_reservations', 'resources'));
+        // 8. Retourner la vue avec TOUTES les données
+        return view('admin.dashboard', compact(
+            'stats',
+            'active_maintenances',
+            'recent_reservations',
+            'resources'
+        ));
     }
 
     /**
@@ -60,10 +114,12 @@ class DashboardController extends Controller
      */
     private function responsableDashboard()
     {
+        // Mêmes corrections ici
         $stats = [
             'total_resources' => Resource::count(),
             'available_resources' => Resource::where('status', 'available')->count(),
-            'occupied_resources' => Resource::where('status', 'occupied')->count(),
+            'occupied_resources' => Resource::where('status', 'reserved')->count(),
+            'reserved_resources' => Resource::where('status', 'reserved')->count(),
             'maintenance_resources' => Resource::where('status', 'maintenance')->count(),
             'active_reservations' => Reservation::where('status', 'active')->count(),
             'pending_reservations' => Reservation::where('status', 'pending')->count(),
@@ -106,23 +162,36 @@ class DashboardController extends Controller
     }
 
     /**
-     * Calculer le taux d'occupation
+     * Dashboard Guest
      */
-    private function calculateOccupationRate()
+    private function guestDashboard()
     {
-        $total_resources = Resource::count();
-        if ($total_resources == 0) return 0;
+        $stats = [
+            'total_resources' => Resource::count(),
+            'available_resources' => Resource::where('status', 'available')->count(),
+            'maintenance_resources' => Resource::where('status', 'maintenance')->count(),
+            'total_maintenances' => Maintenance::count(),
+        ];
 
-        $occupied = Resource::where('status', 'occupied')->count();
-        return round(($occupied / $total_resources) * 100, 2);
+        $available_resources = Resource::where('status', 'available')
+            ->with('category')
+            ->limit(6)
+            ->get();
+
+        $upcoming_maintenances = Maintenance::where('status', 'scheduled')
+            ->with('resource')
+            ->orderBy('start_date', 'asc')
+            ->limit(5)
+            ->get();
+
+        return view('guest.dashboard', compact('stats', 'available_resources', 'upcoming_maintenances'));
     }
 
     /**
-     * Obtenir les données pour les graphiques
+     * Données pour graphiques (optionnel)
      */
     public function getChartData()
     {
-        // Données pour le graphique d'occupation par catégorie
         $categories = \App\Models\Category::with(['resources' => function ($query) {
             $query->withCount('reservations');
         }])->get();
@@ -130,19 +199,18 @@ class DashboardController extends Controller
         $chartData = [];
         foreach ($categories as $category) {
             $total = $category->resources->count();
-            $occupied = $category->resources->filter(function ($resource) {
-                return $resource->status === 'occupied';
+            $reserved = $category->resources->filter(function ($resource) {
+                return $resource->status === 'reserved'; // CHANGÉ
             })->count();
             
             $chartData[] = [
                 'name' => $category->name,
                 'total' => $total,
-                'occupied' => $occupied,
-                'rate' => $total > 0 ? round(($occupied / $total) * 100, 2) : 0
+                'reserved' => $reserved,
+                'rate' => $total > 0 ? round(($reserved / $total) * 100, 2) : 0
             ];
         }
 
-        // Données pour l'historique des réservations (7 derniers jours)
         $reservations_per_day = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
