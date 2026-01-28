@@ -1,163 +1,174 @@
 @extends('layouts.app')
 
+@section('title', 'Détails Réservation')
+
 @push('styles')
-    <link href="{{ asset('css/reservations/show.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/dashboard-layout.css') }}">
+    <style>
+        /* Conteneur pleine largeur */
+        .reservation-full-width-container {
+            width: 100%;
+            max-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .details-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            border: 1px solid #e2e8f0;
+        }
+
+        .details-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .details-body {
+            padding: 20px;
+        }
+
+        /* Tableau d'informations pleine largeur */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .info-table th {
+            width: 250px; /* Largeur fixe pour les étiquettes */
+            background-color: #f1f5f9;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .info-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e293b;
+        }
+
+        .status-banner {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+    </style>
 @endpush
 
 @section('content')
-<div class="reservation-detail-container">
-    <div class="page-header">
-        <h1>Détails de la Réservation</h1>
-        <a href="{{ route('reservations.index') }}" class="btn btn-secondary">← Retour</a>
-    </div>
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    <div class="card">
-        <div class="card-header">
-            <h2>Réservation #{{ $reservation->id }}</h2>
-            <span class="status-badge status-{{ $reservation->status }}">{{ ucfirst($reservation->status) }}</span>
+<div class="reservation-full-width-container">
+    <div class="details-card">
+        <div class="details-header">
+            <h1><i class="fas fa-file-alt"></i> Détails de la Réservation #{{ $reservation->id }}</h1>
+            <a href="{{ route('reservations.index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
         </div>
 
-        <div class="card-body">
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <label>Utilisateur</label>
-                    <p>{{ $reservation->user->name }} ({{ $reservation->user->email }})</p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Ressource</label>
-                    <p>{{ $reservation->resource->name }}</p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Catégorie</label>
-                    <p>{{ $reservation->resource->category->name }}</p>
-                </div>
-
-                <div class="detail-item">
-                    <label>
-Quantité</label>
-                    <p>{{ $reservation->quantity }}</p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Date de Début</label>
-                    <p>{{ \Carbon\Carbon::parse($reservation->date_start)->format('d/m/Y H:i') }}</p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Date de Fin</label>
-                    <p>{{ \Carbon\Carbon::parse($reservation->date_end)->format('d/m/Y H:i') }}</p>
-                </div>
-
-                <div class="detail-item">
-                    <label>Durée</label>
-                    <p>
-                        @php
-                            $duration = \Carbon\Carbon::parse($reservation->date_start)->diffInHours($reservation->date_end);
-                            echo $duration . ' heure(s)';
-                        @endphp
-                    </p>
-                </div>
+        <div class="details-body">
+            <div class="status-banner status-{{ $reservation->status }}">
+                Statut actuel : {{ ucfirst($reservation->status) }}
             </div>
 
-            <div class="detail-section">
-                <label>Justification</label>
-                <div class="justification-box">
-                    {{ $reservation->justification }}
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <label>Spécifications de la Ressource</label>
-                <div class="spec-grid">
-                    <div class="spec-item">
-                        <span class="spec-label">CPU:</span>
-                        <span class="spec-value">{{ $reservation->resource->cpu }} core(s)</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">RAM:</span>
-                        <span class="spec-value">{{ $reservation->resource->ram }}GB</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">Stockage:</span>
-                        <span class="spec-value">{{ $reservation->resource->storage }}GB</span>
-                    </div>
-                    @if($reservation->resource->location)
-                        <div class="spec-item">
-                            <span class="spec-label">Localisation:</span>
-                            <span class="spec-value">{{ $reservation->resource->location }}</span>
-                        </div>
+            <table class="info-table">
+                <tbody>
+                    <tr>
+                        <th>Demandeur</th>
+                        <td>
+                            <strong>{{ $reservation->user->name }}</strong>
+                            <br>
+                            <span class="text-muted">{{ $reservation->user->email }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Ressource</th>
+                        <td>
+                            <strong>{{ $reservation->resource->name }}</strong>
+                            <span class="badge">{{ $reservation->resource->category->name ?? 'Non catégorisé' }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Période</th>
+                        <td>
+                            Du <strong>{{ \Carbon\Carbon::parse($reservation->date_start)->format('d/m/Y à H:i') }}</strong><br>
+                            Au <strong>{{ \Carbon\Carbon::parse($reservation->date_end)->format('d/m/Y à H:i') }}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Quantité</th>
+                        <td>{{ $reservation->quantity }}</td>
+                    </tr>
+                    <tr>
+                        <th>Justification</th>
+                        <td>{{ $reservation->justification }}</td>
+                    </tr>
+                    @if($reservation->rejection_reason)
+                    <tr>
+                        <th>Motif du rejet</th>
+                        <td style="color: var(--danger);">{{ $reservation->rejection_reason }}</td>
+                    </tr>
                     @endif
-                </div>
-            </div>
+                </tbody>
+            </table>
 
-            <div class="detail-section">
-                <label>Dates de Création/Modification</label>
-                <div class="timestamps">
-                    <span><i class="far fa-clock"></i> Créée le: {{ $reservation->created_at->format('d/m/Y H:i') }}</span>
-                    <span><i class="fas fa-pen"></i> Modifiée le: {{ $reservation->updated_at->format('d/m/Y H:i') }}</span>
-                </div>
-            </div>
+            @if(auth()->user()->isAdmin() || auth()->user()->isResponsable())
+                @if($reservation->status === 'pending')
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <form action="{{ route('reservations.approve', $reservation->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check"></i> Approuver
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-danger" onclick="document.getElementById('rejectModal').style.display='block'">
+                            <i class="fas fa-times"></i> Rejeter
+                        </button>
+                    </div>
+                @endif
+            @endif
         </div>
-
-        @if(Auth::user()->isAdmin() && $reservation->status === 'pending')
-        <div class="card-footer">
-            <form method="POST" action="{{ route('reservations.approve', $reservation->id) }}" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn-success">Approuver</button>
-            </form>
-
-            <button type="button" class="btn btn-danger" onclick="openRejectModal()">Rejeter</button>
-        </div>
-        @endif
     </div>
 </div>
 
-<!-- Modal de rejet -->
+<!-- Modal Rejet -->
 <div id="rejectModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeRejectModal()">&times;</span>
-        <h2>Rejeter la Réservation</h2>
-        <form method="POST" action="{{ route('reservations.reject', $reservation->id) }}">
+        <span class="close" onclick="document.getElementById('rejectModal').style.display='none'">&times;</span>
+        <h2>Rejeter la demande</h2>
+        <form action="{{ route('reservations.reject', $reservation->id) }}" method="POST">
             @csrf
             <div class="form-group">
-                <label>Raison du rejet:</label>
-                <textarea name="rejection_reason" required placeholder="Expliquez la raison du rejet..." rows="4"></textarea>
+                <label>Motif du rejet</label>
+                <textarea name="rejection_reason" class="form-control" required rows="3"></textarea>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-danger">Rejeter</button>
-                <button type="button" class="btn btn-secondary" onclick="closeRejectModal()">Annuler</button>
+            <div class="form-actions" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('rejectModal').style.display='none'">Annuler</button>
+                <button type="submit" class="btn btn-danger">Confirmer le rejet</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    function openRejectModal() {
-        document.getElementById('rejectModal').style.display = 'block';
-    }
-
-    function closeRejectModal() {
-        document.getElementById('rejectModal').style.display = 'none';
-    }
-
+    // Fermer le modal si on clique en dehors
     window.onclick = function(event) {
-        const modal = document.getElementById('rejectModal');
+        var modal = document.getElementById('rejectModal');
         if (event.target == modal) {
-            modal.style.display = 'none';
+            modal.style.display = "none";
         }
     }
 </script>

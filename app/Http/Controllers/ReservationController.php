@@ -139,7 +139,7 @@ class ReservationController extends Controller
 
         // Vérifier les permissions
         $user = Auth::user();
-        if (!$user->isAdmin() && $reservation->user_id !== $user->id) {
+        if (!$user->isAdmin() && !$user->isResponsable() && $reservation->user_id !== $user->id) {
             abort(403);
         }
 
@@ -151,6 +151,10 @@ class ReservationController extends Controller
      */
     public function approve($id)
     {
+        if (!Auth::user()->isAdmin() && !Auth::user()->isResponsable()) {
+            abort(403, 'Action non autorisée.');
+        }
+
         $reservation = Reservation::find($id);
 
         if (!$reservation) {
@@ -197,6 +201,10 @@ class ReservationController extends Controller
      */
     public function reject(Request $request, $id)
     {
+        if (!Auth::user()->isAdmin() && !Auth::user()->isResponsable()) {
+            abort(403, 'Action non autorisée.');
+        }
+
         $request->validate([
             'rejection_reason' => 'required|string|min:5|max:255'
         ]);
