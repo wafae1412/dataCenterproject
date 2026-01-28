@@ -20,7 +20,7 @@
                 <span class="status-badge {{ $resource->status }}">{{ $resource->status }}</span>
 
                 {{-- Date de création avec vérification null --}}
-                <span class="created-date">Créée le: {{ $resource->created_at?->format('d/m/Y') ?? 'Date inconnue' }}</span>
+                <span class="created-date">Créée le: {{ $resource->created_at ? $resource->created_at->format('d/m/Y') : 'Date inconnue' }}</span>
             </div>
         </div>
 
