@@ -1,0 +1,1010 @@
+/* Dashboard Global Layout CSS */
+
+/* Variables - Consolidated and Refined */
+:root {
+    --primary: #0a2a43;       /* Deep Blue */
+    --primary-hover: #165f97; /* Lighter Deep Blue */
+    --secondary: #3b82f6;     /* Bright Blue */
+    --success: #10b981;       /* Green */
+    --warning: #f59e0b;       /* Orange */
+    --danger: #ef4444;        /* Red */
+    --info: #3b82f6;          /* Info Blue */
+
+    --light-bg: #f4f6f8;      /* Light Gray Background */
+    --dark-bg: #0f172a;       /* Dark Background */
+    --surface: #ffffff;       /* Card/Element Surface */
+    --border-color: #e2e8f0;  /* Light Gray Border */
+    
+    --text-dark: #1f2937;     /* Dark Text */
+    --text-light: #6b7280;    /* Muted Text */
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Base Layout Container */
+.page-container,
+.dashboard-container,
+.admin-dashboard-container {
+    max-width: 1280px; /* Slightly wider than before */
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    font-family: var(--font-sans);
+    color: var(--text-dark);
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: var(--surface);
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.dashboard-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dashboard-header .subtitle {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Auto-fit for responsiveness */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stats-grid-2col {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.stat-card {
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background-color: var(--light-bg);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-label {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.25rem 0;
+}
+
+.stat-value {
+    color: var(--primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+}
+
+/* Dashboard Sections */
+.dashboard-section,
+.admin-section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    margin-bottom: 2rem; /* Ensure spacing between sections if not in grid */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-header p { /* for admin section subtitle */
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-success { background-color: var(--success); color: white; }
+.btn-success:hover { background-color: #059669; }
+
+.btn-info { background-color: #eff6ff; color: var(--info); }
+.btn-info:hover { background-color: var(--info); color: white; }
+
+.btn-warning { background-color: #fffbeb; color: var(--warning); }
+.btn-warning:hover { background-color: var(--warning); color: white; }
+
+.btn-danger { background-color: #fef2f2; color: var(--danger); }
+.btn-danger:hover { background-color: var(--danger); color: white; }
+
+
+/* --- Tables (Unified) --- */
+.table-container,
+.admin-table,
+.users-table-container,
+.reservations-table { /* Added .reservations-table */
+    overflow-x: auto;
+    border-radius: var(--radius); /* Rounded corners for the container */
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.table,
+.categories-table, /* Added for categories table */
+.users-table { /* Added for users table */
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px; /* Ensures responsiveness */
+}
+
+.table th,
+.categories-table th, /* For categories table */
+.users-table th { /* For users table */
+    background-color: var(--light-bg);
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.table td,
+.categories-table td, /* For categories table */
+.users-table td { /* For users table */
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark);
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+.table tr:last-child td,
+.categories-table tr:last-child td, /* For categories table */
+.users-table tr:last-child td { /* For users table */
+    border-bottom: none;
+}
+
+.table tr:hover td,
+.categories-table tr:hover td, /* For categories table */
+.users-table tr:hover td { /* For users table */
+    background-color: #fcfdfe; /* Very subtle hover */
+}
+
+/* --- Badges --- */
+.status-badge, .role-badge {
+    display: inline-flex;
+    padding: 0.3em 0.7em;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    align-items: center;
+    gap: 0.3em;
+    white-space: nowrap;
+}
+
+.status-pending { background-color: #fef3c7; color: #b45309; } /* Amber */
+.status-active, .status-approved { background-color: #dcfce7; color: #166534; } /* Emerald */
+.status-rejected, .status-cancelled, .status-occupied { background-color: #fee2e2; color: #991b1b; } /* Red */
+.status-maintenance, .status-disabled { background-color: #e2e8f0; color: #475569; } /* Slate */
+.status-finished { background-color: #e0e7ff; color: #3730a3; } /* Indigo */
+
+.role-admin { background-color: #fee2e2; color: #991b1b; }
+.role-responsable { background-color: #e0e7ff; color: #3730a3; }
+.role-user, .role-internal { background-color: #f1f5f9; color: #475569; }
+
+
+/* --- Admin Specific Links (admin-link-card) --- */
+.admin-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; /* Reduced gap slightly */
+    margin-top: 1rem;
+}
+
+.admin-link-card {
+    background: var(--light-bg);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    min-height: 120px;
+}
+
+.admin-link-card:hover {
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    border-color: var(--secondary);
+    transform: translateY(-2px);
+}
+
+.link-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: #eef2ff; /* Light blue background for icon */
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    font-size: 1.3rem;
+}
+
+.admin-link-card h3 {
+    margin: 0 0 0.25rem 0;
+    color: var(--primary);
+    font-size: 1.05rem;
+}
+
+.admin-link-card p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+/* --- Empty State --- */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border-color);
+    color: var(--text-light);
+    font-size: 1rem;
+}
+.empty-state h3 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+.empty-state p {
+    margin-bottom: 1.5rem;
+}
+
+
+/* --- Specific Overrides/Fixes for inline styles or complex structures --- */
+/* Targeting the inline grid-template-columns: 2fr 1fr */
+.admin-dashboard-container > div[style*="grid-template-columns: 2fr 1fr"] {
+    display: grid; /* Ensure it's a grid */
+    grid-template-columns: 2fr 1fr; /* Keep the original ratio */
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 2rem; /* Add consistent margin */
+}
+
+/* Dashboard-specific styles */
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.reservation-item {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: all 0.2s;
+}
+
+.reservation-item:hover {
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--secondary);
+}
+
+.reservation-item .item-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.reservation-item .item-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+.reservation-item .item-date {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reservation-item .item-date strong {
+    color: var(--text-dark);
+}
+
+.reservation-item .item-justification {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin: 0;
+    line-height: 1.4;
+}
+/* Ensure the button in reservation-item is correctly styled */
+.reservation-item .btn-info.btn-small {
+    white-space: nowrap;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s;
+}
+
+.resource-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--secondary);
+}
+
+.resource-card .resource-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.resource-card .resource-header h3 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.resource-card .resource-category {
+    font-size: 0.75rem;
+    background: var(--light-bg);
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-light);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.resource-card .resource-specs {
+    display: grid;
+    grid-template-columns: 1fr; /* Stack specs vertically in card */
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background: var(--light-bg);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+}
+
+.resource-card .spec {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-dark);
+}
+
+.resource-card .spec-icon {
+    color: var(--text-light);
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.resource-card .resource-description {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin: 0 0 1.5rem 0;
+    flex: 1; /* Allows the description to take available space */
+    line-height: 1.5;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* --- Categories Table Specific Styles --- */
+.categories-table {
+    table-layout: fixed; /* Force column widths */
+}
+
+/* Column Widths (Categories Table) */
+.categories-table th:nth-child(1) { width: 60px; }   /* ID */
+.categories-table th:nth-child(2) { width: 30%; }  /* Nom */
+.categories-table th:nth-child(3) { width: 20%; }  /* Ressources */
+.categories-table th:nth-child(4) { width: 20%; }  /* Date de création */
+.categories-table th:nth-child(5) { width: 160px; } /* Actions */
+
+.categories-table .status-badge { /* Target resource count badge */
+    background: var(--light-bg) !important;
+    color: var(--text-dark) !important;
+    border: 1px solid var(--border-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    align-items: center;
+    gap: 0.3em;
+    white-space: nowrap;
+    display: inline-flex;
+}
+
+.categories-table .actions-cell > div[style*="display: flex"] { /* Target inline styled div */
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Category Action Buttons (icon-only) */
+.categories-table .btn-small {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 0 !important; /* Hide text */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+}
+
+.categories-table .btn-small i {
+    font-size: 1rem !important; /* Show icon */
+    pointer-events: none;
+}
+
+.categories-table .btn-small.btn-info {
+    background: #eff6ff; color: var(--info); border-color: #dbeafe;
+}
+.categories-table .btn-small.btn-info:hover {
+    background: var(--info); color: white; border-color: var(--info);
+}
+
+.categories-table .btn-small.btn-warning {
+    background: #fffbeb; color: var(--warning); border-color: #fef3c7;
+}
+.categories-table .btn-small.btn-warning:hover {
+    background: var(--warning); color: white; border-color: var(--warning);
+}
+
+.categories-table .btn-small.btn-danger {
+    background: #fef2f2; color: var(--danger); border-color: #fecaca;
+}
+.categories-table .btn-small.btn-danger:hover {
+    background: var(--danger); color: white; border-color: var(--danger);
+}
+
+
+/* --- Users Table Specific Styles --- */
+.users-table {
+    table-layout: fixed; /* Force column widths */
+}
+
+/* Column Widths (Users Table) */
+.users-table th:nth-child(1) { width: 60px; }   /* ID */
+.users-table th:nth-child(2) { width: 25%; }  /* Nom */
+.users-table th:nth-child(3) { width: 25%; }  /* Email */
+.users-table th:nth-child(4) { width: 15%; }  /* Rôle */
+.users-table th:nth-child(5) { width: 15%; }  /* Date d'inscription */
+.users-table th:nth-child(6) { width: 180px; } /* Actions */
+
+.users-table .user-name {
+    font-weight: 600;
+    color: var(--primary);
+}
+.users-table .user-email {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.users-table .actions-cell {
+    white-space: nowrap;
+}
+
+.users-table .role-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.users-table .role-select {
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    background-color: var(--surface);
+    color: var(--text-dark);
+}
+
+.users-table .btn-update { /* Specific button for update role */
+    background-color: var(--info);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.users-table .btn-update:hover {
+    background-color: var(--secondary);
+}
+
+.users-table .delete-form {
+    display: inline-block; /* Aligns next to role form */
+    margin-left: 0.5rem;
+}
+
+.users-table .btn-delete {
+    background-color: var(--danger);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.users-table .btn-delete:hover {
+    background-color: #dc2626; /* Darker red */
+}
+
+
+/* --- Reservations Table Specific Styles --- */
+.reservations-table {
+    table-layout: fixed;
+}
+
+/* Column Widths (Reservations Table) */
+.reservations-table th:nth-child(1) { width: 15%; } /* Utilisateur */
+.reservations-table th:nth-child(2) { width: 18%; } /* Ressource */
+.reservations-table th:nth-child(3) { width: 10%; } /* Catégorie */
+.reservations-table th:nth-child(4) { width: 8%; }  /* Quantité */
+.reservations-table th:nth-child(5) { width: 15%; } /* Début */
+.reservations-table th:nth-child(6) { width: 15%; } /* Fin */
+.reservations-table th:nth-child(7) { width: 10%; } /* Statut */
+.reservations-table th:nth-child(8) { width: 160px; } /* Actions */
+
+
+.reservations-table .resource-info .name {
+    font-weight: 600;
+    color: var(--primary);
+}
+.reservations-table .resource-info .category {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.reservations-table .actions-cell > a.btn-info { /* View button */
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+}
+.reservations-table .actions-cell > a.btn-info i {
+    font-size: 1rem !important;
+    pointer-events: none;
+}
+.reservations-table .actions-cell > a.btn-info:hover {
+    background: var(--info); color: white; border-color: var(--info);
+}
+
+.reservations-table .actions-cell form {
+    display: inline-flex;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.reservations-table .actions-cell .btn-small {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 0 !important; /* Hide text */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    margin-left: 0.5rem; /* Space between buttons */
+}
+.reservations-table .actions-cell .btn-small i {
+    font-size: 1rem !important; /* Show icon */
+    pointer-events: none;
+}
+
+.reservations-table .actions-cell .btn-small.btn-success {
+    background: #dcfce7; color: var(--success); border-color: #bbf7d0;
+}
+.reservations-table .actions-cell .btn-small.btn-success:hover {
+    background: var(--success); color: white; border-color: var(--success);
+}
+
+.reservations-table .actions-cell .btn-small.btn-warning {
+    background: #fffbeb; color: var(--warning); border-color: #fef3c7;
+}
+.reservations-table .actions-cell .btn-small.btn-warning:hover {
+    background: var(--warning); color: white; border-color: var(--warning);
+}
+
+
+/* --- Modal Rejet Specific Styles --- */
+#rejectModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6); /* Darker overlay */
+    z-index: 1000;
+    display: flex; /* Centering with flexbox */
+    align-items: center;
+    justify-content: center;
+}
+
+#rejectModal > div[style*="background:white"] { /* Target modal content */
+    background: var(--surface) !important;
+    max-width: 500px !important;
+    padding: 2rem !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-lg) !important;
+    margin: 0 auto !important; /* Center horizontally */
+    position: relative !important;
+    top: auto !important; /* Remove inline top */
+}
+
+#rejectModal h2 {
+    font-size: 1.5rem !important;
+    color: var(--primary) !important;
+    margin: 0 !important;
+}
+
+#rejectModal span[onclick="closeRejectModal()"] { /* Close button */
+    font-size: 1.8rem !important;
+    cursor: pointer !important;
+    color: var(--text-light) !important;
+}
+
+#rejectModal label {
+    display: block !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+    color: var(--text-dark) !important;
+}
+
+#rejectModal textarea {
+    width: 100% !important;
+    min-height: 100px !important;
+    padding: 0.75rem !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-sans) !important;
+    color: var(--text-dark) !important;
+    background-color: var(--light-bg) !important;
+    resize: vertical;
+}
+
+#rejectModal button.btn-small.btn-info { /* Annuler button */
+    background-color: var(--light-bg) !important;
+    color: var(--text-dark) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 0.9rem !important;
+    width: auto !important; /* Do not make full width */
+}
+#rejectModal button.btn-small.btn-info:hover {
+    background-color: var(--border-color) !important;
+}
+
+#rejectModal button.btn-small.btn-danger { /* Confirmer Rejet button */
+    background-color: var(--danger) !important;
+    color: white !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 0.9rem !important;
+    width: auto !important;
+}
+#rejectModal button.btn-small.btn-danger:hover {
+    background-color: #dc2626 !important;
+}
+
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+    .page-container,
+    .dashboard-container,
+    .admin-dashboard-container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .stats-grid-2col {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .admin-dashboard-container > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important; /* Stack sections */
+    }
+
+    .filters-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    /* Reservations Table Responsive */
+    .reservations-table th:nth-child(5), /* Début */
+    .reservations-table td:nth-child(5),
+    .reservations-table th:nth-child(6), /* Fin */
+    .reservations-table td:nth-child(6) {
+        display: none; /* Hide date columns to save space */
+    }
+    .reservations-table th:nth-child(1) { width: 18%; } /* Utilisateur */
+    .reservations-table th:nth-child(2) { width: 25%; } /* Ressource */
+    .reservations-table th:nth-child(3) { width: 15%; } /* Catégorie */
+    .reservations-table th:nth-child(4) { width: 10%; } /* Quantité */
+    .reservations-table th:nth-child(7) { width: 12%; } /* Statut */
+    .reservations-table th:nth-child(8) { width: 180px; } /* Actions */
+}
+
+@media (max-width: 768px) {
+    .page-header, .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding: 1rem 1.25rem;
+    }
+    .page-header h1, .dashboard-header h1 {
+        font-size: 1.3rem;
+        text-align: left;
+    }
+    .page-header .subtitle, .dashboard-header .subtitle {
+        font-size: 0.85rem;
+        text-align: left;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid-2col {
+        grid-template-columns: 1fr; /* Full width for stats on small devices */
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    .section-header h2 {
+        font-size: 1.1rem;
+    }
+    .section-header .btn {
+        width: 100%;
+    }
+
+    .admin-link-card {
+        padding: 1rem;
+        min-height: auto;
+    }
+    .admin-link-card h3 {
+        font-size: 1rem;
+    }
+    .admin-link-card p {
+        font-size: 0.75rem;
+    }
+
+    .table th, .table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .reservation-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .reservation-item > div { /* Target direct children of reservation-item */
+        width: 100%;
+    }
+    .reservation-item .item-meta {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .resources-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Users Table specific responsive adjustments */
+    .users-table .role-form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .users-table .role-select {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    .users-table .btn-update {
+        width: 100%;
+    }
+    .users-table .delete-form {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        width: 100%;
+        display: block;
+    }
+    .users-table .btn-delete {
+        width: 100%;
+    }
+
+    /* Reservations Table responsive actions */
+    .reservations-table th:nth-child(8), /* Actions */
+    .reservations-table td:nth-child(8) {
+        width: 100px; /* Make actions column smaller */
+    }
+
+    #rejectModal > div[style*="background:white"] {
+        max-width: 90% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-container,
+    .dashboard-container,
+    .admin-dashboard-container {
+        padding: 0 0.75rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+    .filter-buttons {
+        grid-template-columns: 1fr;
+    }
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .stat-icon { margin-bottom: 0.5rem; }
+    .stat-content { text-align: center; }
+}

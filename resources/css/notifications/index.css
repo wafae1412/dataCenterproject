@@ -1,0 +1,238 @@
+/* Container and Layout */
+.notifications-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #4a5568;
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.page-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.page-header h2 i {
+    color: #718096;
+}
+
+/* Notification Count Badge */
+.notification-count {
+    background-color: #e53e3e;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    box-shadow: 0 2px 4px rgba(229, 62, 62, 0.3);
+    vertical-align: middle;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    border: 1px dashed #cbd5e0;
+    color: #a0aec0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #cbd5e0;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    font-size: 1.125rem;
+    margin: 0;
+    color: #718096;
+}
+
+/* Notifications List */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Notification Card - General */
+.notification-card {
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.notification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e0;
+}
+
+/* Content Area */
+.notification-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.notification-type {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    background-color: #f7fafc;
+}
+
+.notification-time {
+    color: #a0aec0;
+    font-size: 0.8rem;
+}
+
+.notification-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4a5568;
+}
+
+/* Unread State */
+.notification-card.unread {
+    background-color: #f0f9ff;
+    border-color: #bee3f8;
+}
+
+.notification-card.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background-color: #3182ce;
+}
+
+.notification-card.unread .notification-message {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.notification-card.unread .notification-type {
+    color: #2b6cb0;
+    background-color: #ebf8ff;
+}
+
+.notification-card.unread .notification-type i {
+    color: #4299e1;
+}
+
+/* Read State */
+.notification-card.read {
+    background-color: #fff;
+    opacity: 0.9;
+}
+
+.notification-card.read .notification-message {
+    color: #718096;
+}
+
+.notification-card.read .notification-type {
+    color: #718096;
+}
+
+/* Buttons */
+.mark-read-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #cbd5e0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    outline: none;
+}
+
+.notification-card.unread .mark-read-btn {
+    color: #63b3ed;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.mark-read-btn:hover {
+    color: #3182ce;
+    background-color: #ebf8ff;
+    transform: scale(1.05);
+}
+
+.mark-read-btn:focus {
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+.notification-card.read .mark-read-btn {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .notifications-container {
+        padding: 0 1rem;
+        margin-top: 1rem;
+    }
+
+    .notification-card {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .page-header h2 {
+        font-size: 1.5rem;
+    }
+}

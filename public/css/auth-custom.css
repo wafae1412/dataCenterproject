@@ -1,0 +1,266 @@
+/* Auth Custom CSS */
+
+/* Scoped to the auth pages via file inclusion */
+
+/* Main container for centering the form */
+.main-container {
+    min-height: calc(100vh - 60px); /* Adjust based on navbar height, approx. */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    background-color: #f4f6f8; /* Light background */
+    padding: 1rem; /* Overall padding for responsiveness */
+    box-sizing: border-box;
+}
+
+/* Dark mode adjustment for main-container */
+body.dark .main-container {
+    background-color: #0f172a;
+}
+
+/* Reset Laravel/Bootstrap container for auth forms */
+.container {
+    width: 100%; /* Take full width of parent (main-container padding considered) */
+    max-width: 400px; /* Target form width */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+/* Flatten Bootstrap grid specific to auth forms */
+.container > .row { /* Target immediate child .row of .container */
+    display: block; /* Override flex display */
+    margin: 0;
+    width: 100%;
+}
+
+.container > .row > .col-md-8 { /* Target immediate child .col-md-8 of .row */
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Card Styling */
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 4px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Ensure card takes full width of its parent (col-md-8 which is 100%) */
+    max-width: 400px; /* Explicitly set max-width for the card itself */
+    margin: 0 auto; /* Center the card within its parent */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background: #ffffff;
+    padding: 2rem 2rem 1rem; /* Adjust padding for better spacing */
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    text-align: center;
+    border-bottom: none;
+}
+
+/* Dark mode adjustments for card */
+body.dark .card {
+    background-color: #1e293b;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+body.dark .card-header {
+    background-color: transparent;
+    color: #f8fafc;
+}
+
+/* Card Body */
+.card-body {
+    padding: 1rem 2rem 2.5rem; /* Adjust padding for better spacing */
+}
+
+/* Form Groups */
+.row.mb-3 {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem !important; /* Consistent spacing between form fields */
+}
+
+.col-form-label {
+    text-align: left !important;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.col-md-6 { /* For the input field container */
+    padding: 0 !important;
+}
+
+.offset-md-4 { /* For the remember me checkbox and buttons row */
+    margin-left: 0 !important;
+}
+
+/* Inputs */
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #3b82f6;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Dark mode inputs */
+body.dark .form-control {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+}
+
+body.dark .form-control:focus {
+    background-color: #334155;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+/* Buttons */
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #0a2a43 0%, #1a4a73 100%);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 1rem; /* Spacing from elements above */
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #051a2f 0%, #133a5e 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(10, 42, 67, 0.2);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+/* Links (Forgot Password) */
+.btn-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 1rem; /* Spacing from button above */
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.btn-link:hover {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+/* Dark mode links */
+body.dark .btn-link {
+    color: #94a3b8;
+}
+
+/* Checkbox */
+.form-check {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+    margin-top: 0.5rem;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: #64748b;
+    cursor: pointer;
+}
+
+/* Dark mode checkbox */
+body.dark .form-check-label {
+    color: #cbd5e1;
+}
+
+/* Error Messages */
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: #ef4444;
+}
+
+.is-invalid {
+    border-color: #ef4444 !important;
+}
+
+/* Footer Links (Don't have an account?) */
+.text-center.mt-3 p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-top: 2rem; /* Added spacing from buttons/links above */
+}
+
+.text-center.mt-3 a {
+    color: #0a2a43;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.text-center.mt-3 a:hover {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+/* Dark mode footer links */
+body.dark .text-center.mt-3 p {
+    color: #94a3b8;
+}
+
+body.dark .text-center.mt-3 a {
+    color: #60a5fa;
+}
