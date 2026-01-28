@@ -1,196 +1,110 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard Responsable')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/dashboard-layout.css') }}">
+@endpush
+
 @section('content')
-<div class="responsable-dashboard-container">
+<div class="dashboard-container">
     <div class="dashboard-header">
-        <h1><i class="fas fa-user-tie"></i> Tableau de Bord Responsable</h1>
-        <p class="subtitle">Bienvenue, <strong>{{ Auth::user()->name }}</strong>! Gestion centralisée des ressources et réservations.</p>
+        <div>
+            <h1><i class="fas fa-user-tie"></i> Tableau de Bord Responsable</h1>
+            <p class="subtitle">Gestion des ressources et supervision.</p>
+        </div>
     </div>
 
-    <!-- Statistiques -->
+    <!-- Stats Grid -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-database"></i></div>
+            <div class="stat-icon"><i class="fas fa-server"></i></div>
             <div class="stat-content">
                 <p class="stat-label">Total Ressources</p>
                 <p class="stat-value">{{ $stats['total_resources'] }}</p>
             </div>
         </div>
-
         <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-            <div class="stat-content">
-                <p class="stat-label">Disponibles</p>
-                <p class="stat-value">{{ $stats['available_resources'] }}</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-            <div class="stat-content">
-                <p class="stat-label">Occupées</p>
-                <p class="stat-value">{{ $stats['occupied_resources'] }}</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-wrench"></i></div>
-            <div class="stat-content">
-                <p class="stat-label">En Maintenance</p>
-                <p class="stat-value">{{ $stats['maintenance_resources'] }}</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-play-circle"></i></div>
             <div class="stat-content">
                 <p class="stat-label">Réservations Actives</p>
                 <p class="stat-value">{{ $stats['active_reservations'] }}</p>
             </div>
         </div>
-
         <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
             <div class="stat-content">
                 <p class="stat-label">En Attente</p>
                 <p class="stat-value">{{ $stats['pending_reservations'] }}</p>
             </div>
         </div>
-
         <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="stat-icon"><i class="fas fa-tools"></i></div>
             <div class="stat-content">
-                <p class="stat-label">Maintenances Planifiées</p>
-                <p class="stat-value">{{ $stats['scheduled_maintenances'] }}</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-spinner fa-spin"></i></div>
-            <div class="stat-content">
-                <p class="stat-label">Maintenances en Cours</p>
+                <p class="stat-label">Maintenances en cours</p>
                 <p class="stat-value">{{ $stats['in_progress_maintenances'] }}</p>
             </div>
         </div>
     </div>
 
-    <!-- Sections de gestion -->
-    <div class="responsable-sections">
-        <div class="responsable-section">
-            <div class="section-header">
-                <div>
-                    <h2><i class="fas fa-tools"></i> Gestion des Ressources</h2>
-                    <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.5rem;">Accédez aux outils de gestion des ressources et maintenances</p>
-                </div>
-            </div>
-            <div class="responsable-links">
-                <a href="{{ route('resources.index') }}" class="responsable-link-card">
-                    <div class="link-icon"><i class="fas fa-server"></i></div>
-                    <h3>Ressources</h3>
-                    <p>Consulter, modifier et gérer l'état des ressources</p>
-                </a>
-                <a href="{{ route('maintenances.index') }}" class="responsable-link-card">
-                    <div class="link-icon"><i class="fas fa-hammer"></i></div>
-                    <h3>Maintenances</h3>
-                    <p>Planifier et suivre les opérations de maintenance</p>
-                </a>
-            </div>
+    <!-- Gestion Rapide -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2><i class="fas fa-bolt"></i> Gestion Rapide</h2>
         </div>
-
-        <!-- Réservations à Traiter -->
-        <div class="responsable-section">
-            <div class="section-header">
-                <div>
-                    <h2><i class="fas fa-clipboard-list"></i> Réservations Récentes</h2>
-                </div>
-                <a href="{{ route('reservations.index') }}" class="btn btn-primary btn-small">
-                    <i class="fas fa-arrow-right"></i> Voir Tout
-                </a>
-            </div>
-
-            @if($recent_reservations->isEmpty())
-                <div class="empty-state">
-                    <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-light); margin-bottom: 1rem;"></i>
-                    <p>Aucune réservation récente.</p>
-                </div>
-            @else
-                <div class="responsable-table" style="overflow-x: auto;">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-user"></i> Utilisateur</th>
-                                <th><i class="fas fa-database"></i> Ressource</th>
-                                <th><i class="fas fa-calendar"></i> Début</th>
-                                <th><i class="fas fa-calendar"></i> Fin</th>
-                                <th><i class="fas fa-tag"></i> Statut</th>
-                                <th><i class="fas fa-cog"></i> Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($recent_reservations as $reservation)
-                                <tr>
-                                    <td><strong>{{ $reservation->user->name }}</strong></td>
-                                    <td>{{ $reservation->resource->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($reservation->date_start)->format('d/m/Y H:i') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($reservation->date_end)->format('d/m/Y H:i') }}</td>
-                                    <td>
-                                        <span class="status-badge status-{{ $reservation->status }}">
-                                            <i class="fas fa-dot-circle"></i> {{ ucfirst(__('messages.'.$reservation->status)) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('reservations.show', $reservation->id) }}" class="btn btn-info btn-small">
-                                            <i class="fas fa-eye"></i> Voir
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+        <div class="admin-links">
+            <a href="{{ route('resources.index') }}" class="admin-link-card">
+                <div class="link-icon"><i class="fas fa-server"></i></div>
+                <h3>Ressources</h3>
+                <p>Gérer le parc et les disponibilités.</p>
+            </a>
+            <!-- Ajout du lien Réservations -->
+            <a href="{{ route('reservations.index') }}" class="admin-link-card">
+                <div class="link-icon"><i class="fas fa-calendar-alt"></i></div>
+                <h3>Réservations</h3>
+                <p>Valider les demandes en attente.</p>
+            </a>
+            <a href="{{ route('maintenances.index') }}" class="admin-link-card">
+                <div class="link-icon"><i class="fas fa-tools"></i></div>
+                <h3>Maintenances</h3>
+                <p>Planifier les interventions.</p>
+            </a>
         </div>
+    </div>
 
-        <!-- Maintenances Récentes -->
-        <div class="responsable-section">
-            <div class="section-header">
-                <div>
-                    <h2><i class="fas fa-clipboard-list"></i> Maintenances Récentes / à Venir</h2>
-                </div>
-                <a href="{{ route('maintenances.index') }}" class="btn btn-primary btn-small">
-                    <i class="fas fa-arrow-right"></i> Voir Tout
-                </a>
-            </div>
-
-            @if($recent_maintenances->isEmpty())
-                <div class="empty-state">
-                    <i class="fas fa-tools" style="font-size: 3rem; color: var(--text-light); margin-bottom: 1rem;"></i>
-                    <p>Aucune maintenance récente.</p>
-                </div>
-            @else
-                <div class="responsable-table" style="overflow-x: auto;">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Ressource</th>
-                                <th>Titre</th>
-                                <th>Début</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($recent_maintenances as $maintenance)
-                                <tr>
-                                    <td>{{ $maintenance->resource->name ?? 'N/A' }}</td>
-                                    <td><a href="{{ route('maintenances.show', $maintenance) }}">{{ $maintenance->title }}</a></td>
-                                    <td>{{ \Carbon\Carbon::parse($maintenance->start_date)->format('d/m/Y H:i') }}</td>
-                                    <td><span class="status-badge status-{{ $maintenance->status }}">{{ $maintenance->status }}</span></td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+    <!-- Recent Reservations Table -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2><i class="fas fa-history"></i> Dernières Réservations</h2>
+            <a href="{{ route('reservations.index') }}" class="btn btn-primary btn-small">Voir tout</a>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Ressource</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recent_reservations as $reservation)
+                        <tr>
+                            <td>{{ $reservation->user->name }}</td>
+                            <td>{{ $reservation->resource->name }}</td>
+                            <td>{{ \Carbon\Carbon::parse($reservation->date_start)->format('d/m/Y H:i') }}</td>
+                            <td><span class="status-badge status-{{ $reservation->status }}">{{ ucfirst($reservation->status) }}</span></td>
+                            <td>
+                                <a href="{{ route('reservations.show', $reservation->id) }}" class="btn btn-info btn-small"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="text-center">Aucune réservation récente.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
