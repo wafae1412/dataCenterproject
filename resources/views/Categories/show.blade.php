@@ -1,103 +1,76 @@
-@extends('layouts.app') {{-- Layout principal --}}
+@extends('layouts.app')
 
-@section('title', $category->name) {{-- Titre de la page --}}
+@section('title', 'Détails Catégorie')
 
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/categories/show.css') }}"> {{-- CSS spécifique --}}
-@endsection
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/dashboard-layout.css') }}">
+@endpush
 
 @section('content')
-<div class="categories-show">
-    {{-- En-tête de la page --}}
-    <div class="page-header">
-        <div class="header-info">
-            <h1>{{ $category->name }}</h1>
-            <div class="category-meta">
-                {{-- ID de la catégorie --}}
-                <span class="badge">ID: {{ $category->id }}</span>
-
-                {{-- Date de création avec vérification null --}}
-                <span class="created-date">Créée le: {{ $category->created_at?->format('d/m/Y') ?? 'Date inconnue' }}</span>
-            </div>
+<div class="main-content">
+    <div class="dashboard-header">
+        <div>
+            <h1><i class="fas fa-tag"></i> {{ $category->name }}</h1>
+            <p class="subtitle">Détails de la catégorie et ressources associées.</p>
         </div>
-
-        {{-- Boutons d'action --}}
         <div class="header-actions">
-            {{-- Modifier la catégorie (LIEN DIRECT) --}}
-            <a href="/categories/{{ $category->id }}/edit" class="btn edit">Modifier</a>
-
-            {{-- Retour à la liste (LIEN DIRECT) --}}
-            <a href="/categories" class="btn secondary">Retour</a>
+            <a href="{{ route('categories.index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            @if(auth()->user()->role->name === 'Admin')
+                <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+            @endif
         </div>
     </div>
 
-    {{-- Contenu principal --}}
-    <div class="category-content">
-        {{-- Section des ressources --}}
-        <div class="resources-section">
-            <h2>Ressources ({{ $category->resources->count() }})</h2>
-
-            {{-- Si aucune ressource --}}
-            @if($category->resources->isEmpty())
-            <div class="empty-resources">
-                <p>Aucune ressource dans cette catégorie</p>
-                {{-- Ajouter une ressource (LIEN DIRECT) --}}
-                <a href="/resources/create" class="btn small primary">Ajouter une ressource</a>
-            </div>
-            @else
-            {{-- Grille des ressources --}}
-            <div class="resources-grid">
-                {{-- Boucle sur les ressources --}}
-                @foreach($category->resources as $resource)
-                <div class="resource-card">
-                    {{-- Nom de la ressource --}}
-                    <h3>{{ $resource->name }}</h3>
-
-                    {{-- Spécifications --}}
-                    <div class="resource-specs">
-                        <div class="spec">
-                            <span class="spec-label">CPU:</span>
-                            <span class="spec-value">{{ $resource->cpu }} cores</span>
-                        </div>
-                        <div class="spec">
-                            <span class="spec-label">RAM:</span>
-                            <span class="spec-value">{{ $resource->ram }} GB</span>
-                        </div>
-                        <div class="spec">
-                            <span class="spec-label">Stockage:</span>
-                            <span class="spec-value">{{ $resource->storage }} GB</span>
-                        </div>
-                    </div>
-
-                    {{-- Statut de la ressource --}}
-                    <div class="resource-status {{ $resource->status }}">
-                        {{ ucfirst($resource->status) }}
-                    </div>
-
-                    {{-- Actions sur la ressource (LIENS DIRECTS) --}}
-                    <div class="resource-actions">
-                        <a href="/resources/{{ $resource->id }}" class="btn small view">Voir</a>
-                        <a href="/resources/{{ $resource->id }}/edit" class="btn small edit">Modifier</a>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-            @endif
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2><i class="fas fa-info-circle"></i> Informations</h2>
         </div>
+        <div style="padding: 1rem;">
+            <p><strong>Description :</strong> {{ $category->description ?? 'Aucune description.' }}</p>
+            <p><strong>Nombre de ressources :</strong> {{ $category->resources->count() }}</p>
+        </div>
+    </div>
 
-        {{-- Actions sur la catégorie --}}
-        <div class="category-actions">
-            {{-- Formulaire de suppression (LIEN DIRECT) --}}
-            <form action="/categories/{{ $category->id }}" method="POST"
-                  onsubmit="return confirm('Supprimer cette catégorie et toutes ses ressources?')">
-                @csrf @method('DELETE')
-                <button type="submit" class="btn delete">Supprimer la Catégorie</button>
-            </form>
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2><i class="fas fa-server"></i> Ressources dans cette catégorie</h2>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($category->resources as $resource)
+                        <tr>
+                            <td>{{ $resource->name }}</td>
+                            <td>
+                                <span class="status-badge status-{{ $resource->status }}">
+                                    {{ ucfirst($resource->status) }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ route('resources.show', $resource) }}" class="btn btn-info btn-small">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">Aucune ressource dans cette catégorie.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script src="{{ asset('js/categories/show.js') }}"></script> {{-- JavaScript spécifique --}}
 @endsection
